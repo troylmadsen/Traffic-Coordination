@@ -32,6 +32,7 @@ package aim4.vehicle;
 
 import java.util.List;
 
+import madsen.CollisionTracker;
 import aim4.driver.AutoDriver;
 import aim4.map.lane.Lane;
 import aim4.msg.i2v.I2VMessage;
@@ -279,5 +280,13 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    */
   V2IMessage getLastV2IMessage();
 
-
+  
+  
+  /** Troy Madsen */
+  /**
+   * Provides the CollisionTracker of the vehicle.
+   * 
+   * @return The vehicles CollisionTracker
+   */
+  CollisionTracker getCollisionTracker();
 }

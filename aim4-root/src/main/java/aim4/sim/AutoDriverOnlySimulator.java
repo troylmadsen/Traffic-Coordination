@@ -518,6 +518,24 @@ public class AutoDriverOnlySimulator implements Simulator {
           } else { // Otherwise, just set it to the maximum possible value
             interval = Double.MAX_VALUE;
           }
+          
+          // FIXME
+          /** Troy Madsen **/
+          if (interval < 1) {
+        	  //Notifying the first vehicle of the collision
+        	  autoVehicle.getCollisionTracker()
+        	  	.notifyCollision(autoVehicle.getVIN(),
+        	  	((AutoVehicleSimView)nextVehicle.get(autoVehicle)).getVIN());
+        	  
+        	  //Notifying the second vehicle of the collision
+        	  ((AutoVehicleSimView)nextVehicle.get(autoVehicle))
+        	  .getCollisionTracker().notifyCollision(
+        	  ((AutoVehicleSimView)nextVehicle.get(autoVehicle)).getVIN(),
+      	  	  autoVehicle.getVIN());
+          }
+          interval = Double.MAX_VALUE; //Essentially disabling the front distance sensor for testing collision reporting
+          
+          
           // Now actually record it in the vehicle
           autoVehicle.getIntervalometer().record(interval);
           autoVehicle.setLRFSensing(false); // Vehicle is not using

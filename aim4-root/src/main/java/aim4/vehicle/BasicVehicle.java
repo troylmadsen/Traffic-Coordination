@@ -1157,6 +1157,9 @@ public abstract class BasicVehicle implements VehicleSimView {
    * Memoization cache for {@link #gaugeShape()}.
    */
   private Shape memoGaugeShape;
+  
+  /** Troy Madsen */
+  //private CollisionTracker colTrack;
 
   /////////////////////////////////
   // CONSTRUCTORS
@@ -1740,4 +1743,13 @@ public abstract class BasicVehicle implements VehicleSimView {
   public void printState() {
     System.err.printf("State of vin %d: %s\n", vin, movement.toString());
   }
+  
+  /** Troy Madsen */
+  /**
+   * Provides this object.
+   * @return This CollisionTracker.
+   */
+//  public CollisionTracker getCollisionTracker() {
+//	  return colTrack;
+//  }
 }
