@@ -66,7 +66,16 @@ public class CollisionTracker {
 	}
 	
 	/**
-	 * Sets the state of hadCollision to true.
+	 * Access method to allow reading of the collision status of the vehicle.
+	 * 
+	 * @return Whether the vehicle has been part of a collision.
+	 */
+	public boolean hadCollision() {
+		return hadCollision;
+	}
+	
+	/**
+	 * Helper method that sets the state of hadCollision to true.
 	 * 
 	 * @return If the state was changed.
 	 */
