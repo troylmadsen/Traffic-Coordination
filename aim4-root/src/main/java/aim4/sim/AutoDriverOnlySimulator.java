@@ -374,7 +374,10 @@ public class AutoDriverOnlySimulator implements Simulator {
     AutoDriver driver = new AutoDriver(vehicle, basicMap);
     driver.setCurrentLane(lane);
     driver.setSpawnPoint(spawnPoint);
-    driver.setDestination(spawnSpec.getDestinationRoad());
+    
+    /* Troy Madsen */
+    driver.setDestination(basicMap.getRoad(lane));
+//    driver.setDestination(spawnSpec.getDestinationRoad());
     vehicle.setDriver(driver);
 
     return vehicle;
