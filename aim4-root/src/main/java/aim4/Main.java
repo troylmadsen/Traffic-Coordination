@@ -51,6 +51,50 @@ public class Main {
    *
    */
   public static void main(String[] args) {
+	  
+	  /* Troy Madsen */
+	  // Parameter variables
+	  boolean headless = false;
+	  double speedLimit = 25.0;
+	  int lanes = 1;
+	  
+	  // Parsing command line for sim setup
+	  try {
+		  for (int i = 0; i < args.length; i++) {
+			  args[i] = args[i].toLowerCase();
+			  if (args[i].equals("--help") || args[i].equals("-h")) {
+				  System.out.println("Help called");
+			  }
+			  else if (args[i].equals("--headless")) {
+				  headless = true;
+			  }
+			  else if (args[i].equals("--speed-limit")
+					  || args[i].equals("-s")) {
+				  speedLimit = Double.parseDouble(args[++i]);
+				  
+				  if (80.0 < speedLimit || speedLimit < 0) {
+					  throw new IllegalArgumentException("Speed limit may " +
+							  "not be lower than 0 or greater then 80.0.");
+				  }
+			  }
+			  else if (args[i].equals("--lanes") || args[i].equals("-l")) {
+				  lanes = Integer.parseInt(args[++i]);
+				  
+				  if (8 < lanes || lanes < 1) {
+					  throw new IllegalArgumentException("Lanes may not be " +
+							  "less than 1 or greater than 8.");
+				  }
+			  }
+			  else {
+				  throw new IllegalArgumentException("Parameter not known.");
+			  }
+		  }
+	  }
+	  catch (Exception e) {
+		  System.out.println("\nParameter Entry Error! "
+				  + e.getMessage());
+	  }
+	  
 
     // create the basic setup
 
@@ -58,14 +102,22 @@ public class Main {
       = new BasicSimSetup(1, // columns
                           1, // rows
                           4, // lane width
-                          25.0, // speed limit
-                          3, // lanes per road
+                          speedLimit, // speed limit
+                          lanes, // lanes per road
                           1, // median size
                           150, // distance between
                           0.28, // traffic level
                           1.0 // stop distance before intersection
                           );
 
-    new Viewer(simSetup);
+    /* Troy Madsen */
+    Viewer v;
+    if (headless) {
+    	v = new Viewer(simSetup);
+    	v.setTargetFrameRate(0);
+    }
+    else {
+    	new Viewer(simSetup);
+    }
   }
 }
