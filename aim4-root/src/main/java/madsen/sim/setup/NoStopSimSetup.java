@@ -93,7 +93,7 @@ public class NoStopSimSetup extends BasicSimSetup implements SimSetup{
 				medianSize,
 				distanceBetween);
 
-
+		/* Comment this */
 		//TODO: Needs some investigation still
 		ReservationGridManager.Config gridConfig =
 				new ReservationGridManager.Config(SimConfig.TIME_STEP,
@@ -103,12 +103,15 @@ public class NoStopSimSetup extends BasicSimSetup implements SimSetup{
 						0.0,
 						true,
 						1.0);
+		/* End */
 
 		SimConfig.MUST_STOP_BEFORE_INTERSECTION = false;
 		Debug.SHOW_VEHICLE_COLOR_BY_MSG_STATE = false;
 
+		/* Comment this */
 		GridMapUtil.setNoStopManagers(layout, currentTime,
 				gridConfig);
+		/* End */
 
 		if (trafficVolumeFileName == null) {
 			if (numOfColumns == 1 && numOfRows == 1) {
