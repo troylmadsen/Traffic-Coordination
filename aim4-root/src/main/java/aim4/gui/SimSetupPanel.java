@@ -41,6 +41,8 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import madsen.sim.setup.NoStopSimSetup;
+
 import aim4.gui.parampanel.AutoDriverOnlyParamPanel;
 import aim4.gui.parampanel.TrafficSignalParamPanel;
 import aim4.sim.setup.ApproxStopSignSimSetup;
@@ -59,6 +61,8 @@ public class SimSetupPanel extends JPanel implements ItemListener {
   final static String AUTO_DRIVER_ONLY_SETUP_PANEL = "AIM Protocol";
   final static String TRAFFIC_SIGNAL_SETUP_PANEL = "Traffic Signals";
   final static String STOP_SIGN_SETUP_PANEL = "Stop Signs";
+  /* Troy Madsen */
+  final static String NO_STOP_SETUP_PANEL = "No Stop";
 
   /** The combox box */
   private JComboBox comboBox;
@@ -88,7 +92,8 @@ public class SimSetupPanel extends JPanel implements ItemListener {
     String comboBoxItems[] =
       { AUTO_DRIVER_ONLY_SETUP_PANEL,
         TRAFFIC_SIGNAL_SETUP_PANEL,
-        STOP_SIGN_SETUP_PANEL };
+        STOP_SIGN_SETUP_PANEL,
+        NO_STOP_SETUP_PANEL };
     comboBox = new JComboBox(comboBoxItems);
     comboBox.setEditable(false);
     comboBox.addItemListener(this);
@@ -160,6 +165,17 @@ public class SimSetupPanel extends JPanel implements ItemListener {
       simSetup2.setStopDistBeforeIntersection(
         autoDriverOnlySetupPanel.getStopDistToIntersection());
       return simSetup2;
+    } else if (comboBox.getSelectedIndex() == 3) {
+    	/* Troy Madsen */
+    	NoStopSimSetup simSetup2 = new NoStopSimSetup(simSetup);
+    	simSetup2.setTrafficLevel(autoDriverOnlySetupPanel.getTrafficRate());
+        simSetup2.setSpeedLimit(autoDriverOnlySetupPanel.getSpeedLimit());
+        simSetup2.setStopDistBeforeIntersection(
+          autoDriverOnlySetupPanel.getStopDistToIntersection());
+        simSetup2.setNumOfColumns(autoDriverOnlySetupPanel.getNumOfColumns());
+        simSetup2.setNumOfRows(autoDriverOnlySetupPanel.getNumOfRows());
+        simSetup2.setLanesPerRoad(autoDriverOnlySetupPanel.getLanesPerRoad());
+        return simSetup2;
     } else {
       throw new RuntimeException(
           "SimSetupPane::getSimSetup(): not implemented yet");
