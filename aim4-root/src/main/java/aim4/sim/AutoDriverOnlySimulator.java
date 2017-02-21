@@ -377,7 +377,6 @@ public class AutoDriverOnlySimulator implements Simulator {
     
     /* Troy Madsen */
     driver.setDestination(basicMap.getRoad(lane));
-//    driver.setDestination(spawnSpec.getDestinationRoad());
     vehicle.setDriver(driver);
 
     return vehicle;
@@ -523,7 +522,7 @@ public class AutoDriverOnlySimulator implements Simulator {
           }
           
           // FIXME Needs to be optimized
-          /** Troy Madsen **/
+          /* Troy Madsen */
           if (!autoVehicle.getCollisionTracker().hadCollision()) {
 		      for (VehicleSimView v: vinToVehicles.values()) {
 				  if (!v.equals(autoVehicle) && v.getShape()
@@ -540,23 +539,6 @@ public class AutoDriverOnlySimulator implements Simulator {
 				  }
 		      }
           }
-          
-////          // FIXME
-////          /** Troy Madsen **/
-//          if (interval < 0.03) {
-//        	  //Notifying the back vehicle of the collision
-//        	  autoVehicle.getCollisionTracker()
-//        	  	.notifyCollision(autoVehicle.getVIN(),
-//        	  	((AutoVehicleSimView)nextVehicle.get(autoVehicle)).getVIN());
-//        	  
-//        	  //Notifying the front vehicle of the collision
-//        	  ((AutoVehicleSimView)nextVehicle.get(autoVehicle))
-//        	  .getCollisionTracker().notifyCollision(
-//        	  ((AutoVehicleSimView)nextVehicle.get(autoVehicle)).getVIN(),
-//      	  	  autoVehicle.getVIN());
-//          }
-//          interval = Double.MAX_VALUE; //Essentially disabling the front distance sensor for testing collision reporting
-          
           
           // Now actually record it in the vehicle
           autoVehicle.getIntervalometer().record(interval);
