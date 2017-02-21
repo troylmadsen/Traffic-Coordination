@@ -99,6 +99,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
    * Whether or not the IM Shapes are shown by default.
    */
   public static final boolean IS_SHOW_IM_DEBUG_SHAPES_BY_DEFAULT = false;
+  
   // ///////////////////////////////
   // CONSTANTS
   // ///////////////////////////////

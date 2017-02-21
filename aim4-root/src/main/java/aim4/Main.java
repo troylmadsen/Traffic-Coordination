@@ -54,9 +54,12 @@ public class Main {
 	  
 	  /* Troy Madsen */
 	  // Parameter variables
+	  int runNumber = -1;
 	  boolean headless = false;
 	  double speedLimit = 25.0;
 	  int lanes = 1;
+	  double signalDuration = 30.0;
+	  double trafficDensity = 0.28;
 	  
 	  // Parsing command line for sim setup
 	  try {
@@ -64,11 +67,9 @@ public class Main {
 			  args[i] = args[i].toLowerCase();
 			  if (args[i].equals("--help") || args[i].equals("-h")) {
 				  System.out.println("Help called");
-			  }
-			  else if (args[i].equals("--headless")) {
+			  } else if (args[i].equals("--headless")) {
 				  headless = true;
-			  }
-			  else if (args[i].equals("--speed-limit")
+			  } else if (args[i].equals("--speed-limit")
 					  || args[i].equals("-s")) {
 				  speedLimit = Double.parseDouble(args[++i]);
 				  
@@ -76,16 +77,40 @@ public class Main {
 					  throw new IllegalArgumentException("Speed limit may " +
 							  "not be lower than 0 or greater then 80.0.");
 				  }
-			  }
-			  else if (args[i].equals("--lanes") || args[i].equals("-l")) {
+			  } else if (args[i].equals("--lanes") || args[i].equals("-l")) {
 				  lanes = Integer.parseInt(args[++i]);
 				  
 				  if (8 < lanes || lanes < 1) {
 					  throw new IllegalArgumentException("Lanes may not be " +
 							  "less than 1 or greater than 8.");
 				  }
-			  }
-			  else {
+			  } else if (args[i].equals("--run-number")
+					  || args[i].equals("-r")) {
+				  runNumber = Integer.parseInt(args[++i]);
+				  
+				  if (runNumber < 0) {
+					  throw new IllegalArgumentException("Run number may not"
+							  + " be lower than 0.");
+				  }
+			  } else if (args[i].equals("--signal-duration")
+					  || args[i].equals("-s")) {
+				  signalDuration = Double.parseDouble(args[++i]);
+				  
+				  if (signalDuration < 5.0) {
+					  throw new IllegalArgumentException("Signal duration may"
+							  + " not be lower than 5.0 seconds.");
+				  }
+			  } else if (args[i].equals("--traffic-density")
+					  || args[i].equals("-d")) {
+				  // Mapping 0-2500 to 0-0.70
+				  trafficDensity = Double.parseDouble(args[++i])
+						  * (0.7 / 2500.0);
+				  
+				  if (0 > trafficDensity || trafficDensity > 0.7) {
+					  throw new IllegalArgumentException("Traffic density must"
+							  + " be between 0 and 2500.");
+				  }
+			  } else {
 				  throw new IllegalArgumentException("Parameter not known.");
 			  }
 		  }
@@ -93,6 +118,7 @@ public class Main {
 	  catch (Exception e) {
 		  System.out.println("\nParameter Entry Error! "
 				  + e.getMessage());
+		  System.exit(0);
 	  }
 	  
 
@@ -106,7 +132,7 @@ public class Main {
                           lanes, // lanes per road
                           1, // median size
                           150, // distance between
-                          0.28, // traffic level
+                          trafficDensity, // traffic level
                           1.0 // stop distance before intersection
                           );
 
