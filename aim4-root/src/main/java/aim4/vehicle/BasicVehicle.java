@@ -1157,6 +1157,7 @@ public abstract class BasicVehicle implements VehicleSimView {
    * Memoization cache for {@link #gaugeShape()}.
    */
   private Shape memoGaugeShape;
+  
 
   /////////////////////////////////
   // CONSTRUCTORS

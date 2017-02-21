@@ -521,6 +521,43 @@ public class AutoDriverOnlySimulator implements Simulator {
           } else { // Otherwise, just set it to the maximum possible value
             interval = Double.MAX_VALUE;
           }
+          
+          // FIXME Needs to be optimized
+          /** Troy Madsen **/
+          if (!autoVehicle.getCollisionTracker().hadCollision()) {
+		      for (VehicleSimView v: vinToVehicles.values()) {
+				  if (!v.equals(autoVehicle) && v.getShape()
+						  .intersects(autoVehicle.getShape().getBounds())) {
+					  //Notifying the first vehicle of the collision
+		        	  autoVehicle.getCollisionTracker()
+		        	  	.notifyCollision(autoVehicle.getVIN(),
+		        	  	((AutoVehicleSimView)v).getVIN());
+		        	  
+		        	  //Notifying the second vehicle of the collision
+		        	  ((AutoVehicleSimView)v).getCollisionTracker()
+		        	  .notifyCollision(((AutoVehicleSimView)v).getVIN(),
+		        			  autoVehicle.getVIN());
+				  }
+		      }
+          }
+          
+////          // FIXME
+////          /** Troy Madsen **/
+//          if (interval < 0.03) {
+//        	  //Notifying the back vehicle of the collision
+//        	  autoVehicle.getCollisionTracker()
+//        	  	.notifyCollision(autoVehicle.getVIN(),
+//        	  	((AutoVehicleSimView)nextVehicle.get(autoVehicle)).getVIN());
+//        	  
+//        	  //Notifying the front vehicle of the collision
+//        	  ((AutoVehicleSimView)nextVehicle.get(autoVehicle))
+//        	  .getCollisionTracker().notifyCollision(
+//        	  ((AutoVehicleSimView)nextVehicle.get(autoVehicle)).getVIN(),
+//      	  	  autoVehicle.getVIN());
+//          }
+//          interval = Double.MAX_VALUE; //Essentially disabling the front distance sensor for testing collision reporting
+          
+          
           // Now actually record it in the vehicle
           autoVehicle.getIntervalometer().record(interval);
           autoVehicle.setLRFSensing(false); // Vehicle is not using
