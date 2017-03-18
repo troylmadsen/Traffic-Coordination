@@ -53,6 +53,9 @@ public class Main {
   public static void main(String[] args) {
 	  
 	  /* Troy Madsen */
+	  // Final values
+	  final int NUM_MODELS = 4;
+	  
 	  // Parameter variables
 	  int runNumber = -1;
 	  boolean headless = false;
@@ -60,8 +63,27 @@ public class Main {
 	  int lanes = 1;
 	  double signalDuration = 30.0;
 	  double trafficDensity = 0.28;
+	  String logFile = "Reasearch Log Default";
+	  int executionDuration = 60;
+	  int modelNum = 0;
 	  
 	  // Parsing command line for sim setup
+	  /*
+	   * Help				-h --help				Displays help
+	   * Headless			--headless				Sets the simulator as
+	   * 											headless
+	   * Speed Limit		-s --speed-limit		Sets the speed limit
+	   * Lane Count			-l --lanes				Sets the number of lanes
+	   * Run Number			-r --run-number			Sets the current run number
+	   * Signal Duration	-s --signal-duration	Sets the duration of stop
+	   * 											lights
+	   * Traffic Density	-d --traffic-density	Sets the traffic density
+	   * Log File			-f --log-file			Sets the name of the log
+	   * 											file
+	   * Execution Duration	-e --execution-duration	Sets the execution duration
+	   * Model				-m --model				Sets the simulator model
+	   * 											to run
+	   */
 	  try {
 		  for (int i = 0; i < args.length; i++) {
 			  args[i] = args[i].toLowerCase();
@@ -110,6 +132,19 @@ public class Main {
 					  throw new IllegalArgumentException("Traffic density must"
 							  + " be between 0 and 2500.");
 				  }
+			  } else if(args[i].equals("--log-file") || args[i].equals("-f")) {
+				  logFile = args[++i];
+			  } else if (args[i].equals("--execution-duration")
+					  || args[i].equals("-e")) {
+				  
+			  } else if (args[i].equals("--model") || args[i].equals("-m")) {
+				  modelNum = Integer.parseInt(args[++i]);
+				  
+				  if (NUM_MODELS <= modelNum || modelNum < 0) {
+					  throw new IllegalArgumentException("Specified model "
+							  + "must be between 0 and " + NUM_MODELS
+							  + " exclusive.");
+				  }
 			  } else {
 				  throw new IllegalArgumentException("Parameter not known.");
 			  }
@@ -141,6 +176,8 @@ public class Main {
     if (headless) {
     	v = new Viewer(simSetup);
     	v.setTargetFrameRate(0);
+//    	//FIXME Implement method to allow automated starting
+//    	v.start();
     }
     else {
     	new Viewer(simSetup);
