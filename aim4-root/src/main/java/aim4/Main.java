@@ -32,6 +32,7 @@ package aim4;
 
 import aim4.gui.Viewer;
 import aim4.sim.setup.BasicSimSetup;
+import aim4.util.Util;
 
 /**
  * The default main class to show the GUI.
@@ -114,6 +115,9 @@ public class Main {
 					  throw new IllegalArgumentException("Run number may not"
 							  + " be lower than 0.");
 				  }
+				  
+				  // Setting the random number generator
+				  Util.random.setSeed(runNumber);
 			  } else if (args[i].equals("--signal-duration")
 					  || args[i].equals("-s")) {
 				  signalDuration = Double.parseDouble(args[++i]);
