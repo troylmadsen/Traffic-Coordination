@@ -30,10 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4;
 
-import java.awt.Component;
-
-import javax.swing.JButton;
-
 import aim4.gui.Viewer;
 import aim4.sim.setup.BasicSimSetup;
 import aim4.util.Util;
@@ -70,9 +66,9 @@ public class Main {
 	  double trafficDensity = 0.28;
 	  String logFile = "Research Log Default";
 	  int executionDuration = 60;
-	  int modelNum = 0;
+	  int modelNum = 4;
 	  
-	  // Parsing command line for sim setup
+	  // Parsing command line for simulator setup
 	  /*
 	   * Help				-h -help				Displays help
 	   * Headless			-headless				Sets the simulator as
@@ -201,7 +197,7 @@ public class Main {
     /* Troy Madsen */
     Viewer v;
     if (headless) {
-    	v = new Viewer(simSetup, false, true);
+    	v = new Viewer(simSetup, false, true, modelNum);
     }
     else {
     	new Viewer(simSetup);

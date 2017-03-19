@@ -471,7 +471,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
    * @param isRunNow      whether or not the simulation is run immediately
    */
   public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow,
-		  final boolean isRunHeadless) {
+		  final boolean isRunHeadless, final int modelIndex) {
     super(TITLEBAR_STRING);
     this.initSimSetup = initSimSetup;
     this.sim = null;
@@ -505,6 +505,9 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
       public void run() {
     	// Passing false to avoid issues in original code
         createAndShowGUI(initSimSetup, false);
+        
+        // Set the running model
+        simSetupPanel.setModel(modelIndex);
         
         //Starting the simulator
         if (isRunHeadless) {

@@ -74,6 +74,9 @@ public class SimSetupPanel extends JPanel implements ItemListener {
   private AutoDriverOnlyParamPanel autoDriverOnlySetupPanel;
   /** The traffic signal setup panel */
   private TrafficSignalParamPanel trafficSignalSetupPanel;
+  /* Troy Madsen */
+  /** The noStop setup panel */
+  private AutoDriverOnlyParamPanel noStopSetupPanel;
   /** The simulation setup panel */
   private BasicSimSetup simSetup;
 
@@ -89,6 +92,7 @@ public class SimSetupPanel extends JPanel implements ItemListener {
     JPanel comboBoxPane = new JPanel(); //use FlowLayout
     comboBoxPane.setBackground(Color.WHITE);
 
+    /* Troy Madsen */
     String comboBoxItems[] =
       { AUTO_DRIVER_ONLY_SETUP_PANEL,
         TRAFFIC_SIGNAL_SETUP_PANEL,
@@ -110,6 +114,9 @@ public class SimSetupPanel extends JPanel implements ItemListener {
     trafficSignalSetupPanel = new TrafficSignalParamPanel();
     cards.add(trafficSignalSetupPanel, TRAFFIC_SIGNAL_SETUP_PANEL);
     cards.add(new JPanel(), STOP_SIGN_SETUP_PANEL);
+    /* Troy Madsen */
+    noStopSetupPanel = new AutoDriverOnlyParamPanel(simSetup);
+    cards.add(noStopSetupPanel, NO_STOP_SETUP_PANEL);
 
     // add the combo box pane and cards pane
     setLayout(new BorderLayout());
@@ -180,6 +187,17 @@ public class SimSetupPanel extends JPanel implements ItemListener {
       throw new RuntimeException(
           "SimSetupPane::getSimSetup(): not implemented yet");
     }
+  }
+  
+  /* Troy Madsen */
+  /**
+   * Sets the active model to the specified value.
+   * 
+   * @param modelIndex The index of the model in the comboBox to run.
+   * @return whether the model specified was selected.
+   */
+  public void setModel(int modelIndex) {
+	  comboBox.setSelectedIndex(modelIndex);
   }
 
   /**
