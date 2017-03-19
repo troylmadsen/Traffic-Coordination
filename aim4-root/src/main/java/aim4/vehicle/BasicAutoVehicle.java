@@ -36,14 +36,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import madsen.CollisionTracker;
 import aim4.config.Debug;
 import aim4.driver.AutoDriver;
-import aim4.driver.DriverSimView;
 import aim4.map.lane.Lane;
 import aim4.msg.i2v.I2VMessage;
 import aim4.msg.v2i.V2IMessage;
 import aim4.noise.DoubleGauge;
-import aim4.vehicle.AutoVehicleDriverView.LRFMode;
 
 
 /**
@@ -232,9 +231,16 @@ public class BasicAutoVehicle extends BasicVehicle
   /**
    * A gauge holding the speed, in meters per second, of the vehicle behind
    * the vehicle on the target lane.  If there is no vehicle behind on the
-   * target lane, the balue should be Double.MAX_VALUE.
+   * target lane, the value should be Double.MAX_VALUE.
    */
   private DoubleGauge rearVehicleSpeedSensor = new DoubleGauge();
+  
+  /**
+   * Troy Madsen
+   * 
+   * A tracker responsible for reporting the collision status of the vehicle.
+   */
+  private CollisionTracker colTracker = new CollisionTracker();
 
 
   /////////////////////////////////
@@ -247,7 +253,6 @@ public class BasicAutoVehicle extends BasicVehicle
    * The last V2I message
    */
   private V2IMessage lastV2IMessage;
-
 
 
   /////////////////////////////////
@@ -539,5 +544,14 @@ public class BasicAutoVehicle extends BasicVehicle
   public V2IMessage getLastV2IMessage() {
     return lastV2IMessage;
   }
-
+  
+  
+  
+  /** Troy Madsen */
+  /**
+   * 
+   */
+  public CollisionTracker getCollisionTracker() {
+	  return colTracker;
+  }
 }

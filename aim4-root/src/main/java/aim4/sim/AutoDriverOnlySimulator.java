@@ -374,7 +374,9 @@ public class AutoDriverOnlySimulator implements Simulator {
     AutoDriver driver = new AutoDriver(vehicle, basicMap);
     driver.setCurrentLane(lane);
     driver.setSpawnPoint(spawnPoint);
-    driver.setDestination(spawnSpec.getDestinationRoad());
+    
+    /* Troy Madsen */
+    driver.setDestination(basicMap.getRoad(lane));
     vehicle.setDriver(driver);
 
     return vehicle;
@@ -518,6 +520,26 @@ public class AutoDriverOnlySimulator implements Simulator {
           } else { // Otherwise, just set it to the maximum possible value
             interval = Double.MAX_VALUE;
           }
+          
+          // FIXME Needs to be optimized
+          /* Troy Madsen */
+          if (!autoVehicle.getCollisionTracker().hadCollision()) {
+		      for (VehicleSimView v: vinToVehicles.values()) {
+				  if (!v.equals(autoVehicle) && v.getShape()
+						  .intersects(autoVehicle.getShape().getBounds())) {
+					  //Notifying the first vehicle of the collision
+		        	  autoVehicle.getCollisionTracker()
+		        	  	.notifyCollision(autoVehicle.getVIN(),
+		        	  	((AutoVehicleSimView)v).getVIN());
+		        	  
+		        	  //Notifying the second vehicle of the collision
+		        	  ((AutoVehicleSimView)v).getCollisionTracker()
+		        	  .notifyCollision(((AutoVehicleSimView)v).getVIN(),
+		        			  autoVehicle.getVIN());
+				  }
+		      }
+          }
+          
           // Now actually record it in the vehicle
           autoVehicle.getIntervalometer().record(interval);
           autoVehicle.setLRFSensing(false); // Vehicle is not using
