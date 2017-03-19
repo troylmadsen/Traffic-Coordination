@@ -461,6 +461,59 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
   public Viewer(BasicSimSetup initSimSetup) {
     this(initSimSetup, false);
   }
+  
+  /* Troy Madsen */
+  /**
+   * Create a new viewer object. Allows for the starting of the simulator
+   * immediately.
+   *
+   * @param initSimSetup  the initial simulation setup
+   * @param isRunNow      whether or not the simulation is run immediately
+   */
+  public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow,
+		  final boolean isRunHeadless) {
+    super(TITLEBAR_STRING);
+    this.initSimSetup = initSimSetup;
+    this.sim = null;
+    this.udpListener = null;
+    this.simThread = null;
+
+    targetSimSpeed = DEFAULT_SIM_SPEED;
+    // the frame rate cannot be not larger than the simulation cycle
+    targetFrameRate =
+        Math.min(DEFAULT_TARGET_FRAME_RATE, SimConfig.CYCLES_PER_SECOND);
+    this.nextFrameTime = 0; // undefined yet.
+
+    this.recording = false;
+    this.imageDir = null;
+    this.imageCounter = 0;
+
+    // for debugging
+    Debug.viewer = this;
+    
+    // No frame rate to allow for headless functionality
+    setTargetFrameRate(0);
+
+    // Lastly, schedule a job for the event-dispatching thread:
+    // creating and showing this application's GUI.
+    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void run() {
+    	// Passing false to avoid issues in original code
+        createAndShowGUI(initSimSetup, false);
+        
+        //Starting the simulator
+        if (isRunHeadless) {
+        	startButton.doClick();
+        }
+      }
+
+    });
+  }
 
   /**
    * Create a new viewer object.

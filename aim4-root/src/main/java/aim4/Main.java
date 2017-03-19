@@ -30,6 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4;
 
+import java.awt.Component;
+
+import javax.swing.JButton;
+
 import aim4.gui.Viewer;
 import aim4.sim.setup.BasicSimSetup;
 import aim4.util.Util;
@@ -197,10 +201,7 @@ public class Main {
     /* Troy Madsen */
     Viewer v;
     if (headless) {
-    	v = new Viewer(simSetup);
-    	v.setTargetFrameRate(0);
-//    	//FIXME Implement method to allow automated starting
-//    	v.start();
+    	v = new Viewer(simSetup, false, true);
     }
     else {
     	new Viewer(simSetup);
