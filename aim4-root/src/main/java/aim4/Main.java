@@ -66,7 +66,7 @@ public class Main {
 	  double trafficDensity = 0.28;
 	  String logFile = "Research Log Default";
 	  int executionDuration = 60;
-	  int modelNum = 4;
+	  int modelNum = 3;
 	  
 	  // Parsing command line for simulator setup
 	  /*
@@ -159,7 +159,12 @@ public class Main {
 				  logFile = args[++i];
 			  } else if (args[i].equals("-execution-duration")
 					  || args[i].equals("-e")) {
+				  executionDuration = Integer.parseInt(args[++i]);
 				  
+				  if (60 > executionDuration) {
+					  throw new IllegalArgumentException("Execution duration"
+					  		+ " must be longer than 60.");
+				  }
 			  } else if (args[i].equals("-model") || args[i].equals("-m")) {
 				  modelNum = Integer.parseInt(args[++i]);
 				  
@@ -197,7 +202,7 @@ public class Main {
     /* Troy Madsen */
     Viewer v;
     if (headless) {
-    	v = new Viewer(simSetup, false, true, modelNum);
+    	v = new Viewer(simSetup, false, true, modelNum, executionDuration);
     }
     else {
     	new Viewer(simSetup);

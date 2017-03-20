@@ -64,10 +64,10 @@ import aim4.gui.frame.VehicleInfoFrame;
 import aim4.im.IntersectionManager;
 import aim4.map.Road;
 import aim4.map.lane.Lane;
-import aim4.sim.Simulator;
-import aim4.sim.UdpListener;
 import aim4.sim.AutoDriverOnlySimulator.AutoDriverOnlySimStepResult;
+import aim4.sim.Simulator;
 import aim4.sim.Simulator.SimStepResult;
+import aim4.sim.UdpListener;
 import aim4.sim.setup.BasicSimSetup;
 import aim4.sim.setup.SimFactory;
 import aim4.sim.setup.SimSetup;
@@ -300,6 +300,12 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
     public void run() {
       Thread thisThread = Thread.currentThread();
       while (blinker == thisThread) {
+    	/* Troy Madsen */
+    	// If duration reached, stop the simulation and handle results.
+        if (hasHaltDuration && sim.getSimulationTime() >= haltDuration) {
+      	  handleDurationHalt();
+        }
+    	  
         if (isStopped) {
           try {
             Thread.sleep(10L); // just sleep for a very short moment
@@ -448,6 +454,12 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
   private JCheckBoxMenuItem showIMShapesMenuItem;
   /** Menu item for clearing simulator's debug point */
   private JMenuItem clearDebugPointsMenuItem;
+  
+  /* Troy Madsen */
+  /** Whether the simulation is using a execution duration */
+  private boolean hasHaltDuration;
+  /** Duration simulation should halt after */
+  private int haltDuration;
 
   // ///////////////////////////////
   // CLASS CONSTRUCTORS
@@ -471,7 +483,8 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
    * @param isRunNow      whether or not the simulation is run immediately
    */
   public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow,
-		  final boolean isRunHeadless, final int modelIndex) {
+		  final boolean isRunHeadless, final int modelIndex,
+		  final int haltDuration) {
     super(TITLEBAR_STRING);
     this.initSimSetup = initSimSetup;
     this.sim = null;
@@ -493,6 +506,10 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
     
     // No frame rate to allow for headless functionality
     setTargetFrameRate(0);
+    
+    // Setting duration halting
+    this.hasHaltDuration = true;
+    this.haltDuration = haltDuration;
 
     // Lastly, schedule a job for the event-dispatching thread:
     // creating and showing this application's GUI.
@@ -543,6 +560,10 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 
     // for debugging
     Debug.viewer = this;
+    
+    /* Troy Madsen */
+    // Disabling duration halting
+    this.hasHaltDuration = false;
 
     // Lastly, schedule a job for the event-dispatching thread:
     // creating and showing this application's GUI.
@@ -1034,6 +1055,25 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
       }
       simThread = new SimThread(true, timerDelay);
     }
+  }
+  
+  
+  /* Troy Madsen */
+  /**
+   * Handles a halt from the execution duration being hit.
+   */
+  private void handleDurationHalt() {
+	  // Pausing the simulation
+	  startButton.doClick();
+	  
+	  //FIXME Log here
+	  
+	  // Cleaning up the simulation
+	  resetMenuItem.doClick();
+	  
+	  //Exiting simulation
+	  System.out.println("Exiting the simulation");
+	  System.exit(0);
   }
 
 
