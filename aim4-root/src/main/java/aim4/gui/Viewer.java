@@ -45,6 +45,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.GroupLayout;
@@ -64,6 +67,7 @@ import aim4.gui.frame.VehicleInfoFrame;
 import aim4.im.IntersectionManager;
 import aim4.map.Road;
 import aim4.map.lane.Lane;
+import aim4.sim.AutoDriverOnlySimulator;
 import aim4.sim.AutoDriverOnlySimulator.AutoDriverOnlySimStepResult;
 import aim4.sim.Simulator;
 import aim4.sim.Simulator.SimStepResult;
@@ -460,6 +464,8 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
   private boolean hasHaltDuration;
   /** Duration simulation should halt after */
   private int haltDuration;
+  /** File name to log data to after execution */
+  private String logFile;
 
   // ///////////////////////////////
   // CLASS CONSTRUCTORS
@@ -484,7 +490,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
    */
   public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow,
 		  final boolean isRunHeadless, final int modelIndex,
-		  final int haltDuration) {
+		  final int haltDuration, final String logFile) {
     super(TITLEBAR_STRING);
     this.initSimSetup = initSimSetup;
     this.sim = null;
@@ -510,6 +516,9 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
     // Setting duration halting
     this.hasHaltDuration = true;
     this.haltDuration = haltDuration;
+    
+    // Setting log file name
+    this.logFile = logFile;
 
     // Lastly, schedule a job for the event-dispatching thread:
     // creating and showing this application's GUI.
@@ -1066,7 +1075,10 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 	  // Pausing the simulation
 	  startButton.doClick();
 	  
-	  //FIXME Log here
+	  // Verifying simulator type to retrieve data from and writing log
+	  if (sim instanceof AutoDriverOnlySimulator) {
+		  writeLogFile((AutoDriverOnlySimulator) sim);
+	  }
 	  
 	  // Cleaning up the simulation
 	  resetMenuItem.doClick();
@@ -1074,6 +1086,32 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 	  //Exiting simulation
 	  System.out.println("Exiting the simulation");
 	  System.exit(0);
+  }
+  
+  
+  /* Troy Madsen */
+  /**
+   * Creates the log file from the retrieved data.
+   * 
+   * @param sim The simulator to write data from
+   */
+  private void writeLogFile(AutoDriverOnlySimulator sim) {
+	  BufferedWriter bw = null;
+	  try {
+		  File file = new File(logFile);
+		  file.createNewFile();
+		  bw = new BufferedWriter(new FileWriter(file, true));
+		  bw.write("Testing!");
+		  //TODO Add final output
+	  } catch (IOException e) {
+		  e.printStackTrace();
+	  } finally {
+		  try {
+			bw.close();
+		} catch (IOException e) {
+			// Ignoring exceptions
+		}
+	  }
   }
 
 

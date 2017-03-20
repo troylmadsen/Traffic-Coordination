@@ -122,6 +122,12 @@ public class AutoDriverOnlySimulator implements Simulator {
   private int totalBitsTransmittedByCompletedVehicles;
   /** The total number of bits received by the completed vehicles */
   private int totalBitsReceivedByCompletedVehicles;
+  
+  /* Troy Madsen */
+  /** List of all vehicle completion times */
+  private LinkedList<Double> completionTimes;
+  /** Number of collisions that occurred */
+  private int collisionCount;
 
 
   /////////////////////////////////
@@ -141,6 +147,10 @@ public class AutoDriverOnlySimulator implements Simulator {
     numOfCompletedVehicles = 0;
     totalBitsTransmittedByCompletedVehicles = 0;
     totalBitsReceivedByCompletedVehicles = 0;
+    
+    /* Troy Madsen */
+    completionTimes = new LinkedList<Double>();
+    collisionCount = 0;
   }
 
   /////////////////////////////////
@@ -260,6 +270,26 @@ public class AutoDriverOnlySimulator implements Simulator {
   @Override
   public VehicleSimView getActiveVehicle(int vin) {
     return vinToVehicles.get(vin);
+  }
+  
+  /* Troy Madsen */
+  /**
+   * Provides the completion times of all completed vehicles
+   * 
+   * @return LinkedList of vehicle completion times
+   */
+  public LinkedList<Double> getCompletionTimes() {
+	  return completionTimes;
+  }
+  
+  /* Troy Madsen */
+  /**
+   * Providse the number of collisions that occurred
+   * 
+   * @return Number of collisions that occurred
+   */
+  public int getCollisionCount() {
+	  return collisionCount;
   }
 
 
@@ -527,6 +557,9 @@ public class AutoDriverOnlySimulator implements Simulator {
 		      for (VehicleSimView v: vinToVehicles.values()) {
 				  if (!v.equals(autoVehicle) && v.getShape()
 						  .intersects(autoVehicle.getShape().getBounds())) {
+					  //FIXME Testing
+					  System.out.println("Collision!");
+					  
 					  //Notifying the first vehicle of the collision
 		        	  autoVehicle.getCollisionTracker()
 		        	  	.notifyCollision(autoVehicle.getVIN(),
@@ -536,6 +569,9 @@ public class AutoDriverOnlySimulator implements Simulator {
 		        	  ((AutoVehicleSimView)v).getCollisionTracker()
 		        	  .notifyCollision(((AutoVehicleSimView)v).getVIN(),
 		        			  autoVehicle.getVIN());
+		        	  
+		        	  //Incrementign collision counter
+		        	  collisionCount++;
 				  }
 		      }
           }
@@ -966,6 +1002,7 @@ public class AutoDriverOnlySimulator implements Simulator {
     }
     // Remove the marked vehicles
     for(int vin : removedVINs) {
+      completionTimes.add(currentTime);
       vinToVehicles.remove(vin);
       completedVINs.add(vin);
       numOfCompletedVehicles++;

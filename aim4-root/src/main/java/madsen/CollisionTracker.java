@@ -59,9 +59,9 @@ public class CollisionTracker {
 			this.otherVIN = otherVIN;
 			setHadCollision();
 			
-			//FIXME Debugging
-			System.out.println("Collision: " + Integer.toString(myVIN)
-					+ " " + Integer.toString(otherVIN));
+//			//FIXME Debugging
+//			System.out.println("Collision: " + Integer.toString(myVIN)
+//					+ " " + Integer.toString(otherVIN));
 		}
 	}
 	

@@ -64,7 +64,7 @@ public class Main {
 	  int lanes = 1;
 	  double signalDuration = 30.0;
 	  double trafficDensity = 0.28;
-	  String logFile = "Research Log Default";
+	  String logFile = "Research_Log_Default";
 	  int executionDuration = 60;
 	  int modelNum = 3;
 	  
@@ -202,7 +202,8 @@ public class Main {
     /* Troy Madsen */
     Viewer v;
     if (headless) {
-    	v = new Viewer(simSetup, false, true, modelNum, executionDuration);
+    	v = new Viewer(simSetup, false, true, modelNum, executionDuration,
+    			logFile);
     }
     else {
     	new Viewer(simSetup);
