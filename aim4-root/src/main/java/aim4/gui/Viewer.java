@@ -1158,7 +1158,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 	  double startTime = completionTimes.get(0);
 	  int initCompleted = 0;
 	  int i = 0;
-	  while (completionTimes.get(i) != null
+	  while (i < completionTimes.size() && completionTimes.get(i) != null
 			  && completionTimes.get(i) < startTime + window) {
 		  initCompleted++;
 		  i++;
@@ -1167,7 +1167,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 	  // Calculating number completed at the end within window
 	  int endCompleted = 0;
 	  i = completionTimes.size() - 1;
-	  while (completionTimes.get(i) != null
+	  while (i >= 0 && completionTimes.get(i) != null
 			  && completionTimes.get(i) > haltDuration - window) {
 		  endCompleted++;
 		  i--;
