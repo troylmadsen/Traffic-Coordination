@@ -2,6 +2,9 @@
 
 import os
 
+# Removing old log files
+os.system('rm Model?.log')
+
 # Tuples to be run. Each is of the form [[Models], [Traffic Densities],
 # [Execution durations], [Speed Limits]].
 ops = [[1, 2, 3],
