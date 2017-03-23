@@ -49,6 +49,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -460,12 +461,16 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
   private JMenuItem clearDebugPointsMenuItem;
   
   /* Troy Madsen */
+  /** Number of the current model */
+  private int modelNumber;
   /** Whether the simulation is using a execution duration */
   private boolean hasHaltDuration;
   /** Duration simulation should halt after */
   private int haltDuration;
   /** File name to log data to after execution */
   private String logFile;
+  /** Current run number */
+  private int runNumber;
 
   // ///////////////////////////////
   // CLASS CONSTRUCTORS
@@ -490,7 +495,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
    */
   public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow,
 		  final boolean isRunHeadless, final int modelIndex,
-		  final int haltDuration, final String logFile) {
+		  final int haltDuration, final String logFile, final int runNumber) {
     super(TITLEBAR_STRING);
     this.initSimSetup = initSimSetup;
     this.sim = null;
@@ -513,12 +518,18 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
     // No frame rate to allow for headless functionality
     setTargetFrameRate(0);
     
+    // Setting current model
+    this.modelNumber = modelIndex;
+    
     // Setting duration halting
     this.hasHaltDuration = true;
     this.haltDuration = haltDuration;
     
     // Setting log file name
     this.logFile = logFile;
+    
+    // Setting the run number
+    this.runNumber = runNumber;
 
     // Lastly, schedule a job for the event-dispatching thread:
     // creating and showing this application's GUI.
@@ -1101,8 +1112,14 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 		  File file = new File(logFile);
 		  file.createNewFile();
 		  bw = new BufferedWriter(new FileWriter(file, true));
-		  bw.write("Testing!");
-		  //TODO Add final output
+		  bw.write(modelNumber + ", "
+		  + runNumber + ", " 
+		  + initSimSetup.getTrafficLevel() + ", "
+		  + haltDuration + ", "
+		  + initSimSetup.getSpeedLimit() + ", "
+		  + sim.getNumCompletedVehicles() + ", "
+		  + calcDegradation(sim) + ", "
+		  + sim.getCollisionCount() + "\n");
 	  } catch (IOException e) {
 		  e.printStackTrace();
 	  } finally {
@@ -1112,6 +1129,51 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
 			// Ignoring exceptions
 		}
 	  }
+  }
+  
+  /* Troy Madsen */
+  /**
+   * Calculates the throughput of the simulation.
+   * 
+   * @return The throughput of the simulation
+   */
+  private double calcThroughput(AutoDriverOnlySimulator sim) {
+	  return (double)sim.getNumCompletedVehicles()
+			  / ((double)sim.getNumCompletedVehicles()
+					  + (double)sim.getNumActiveVehicles());
+  }
+  
+  /* Troy Madsen */
+  /**
+   * Calculates the degradation of the simulation over the first x simulation
+   * seconds.
+   * 
+   * @return The degradation of traffic flow in the simulation
+   */
+  private double calcDegradation(AutoDriverOnlySimulator sim) {
+	  final double window = 30.0;
+	  ArrayList<Double> completionTimes = sim.getCompletionTimes();
+	  
+	  // Calculating number completed from start within window
+	  double startTime = completionTimes.get(0);
+	  int initCompleted = 0;
+	  int i = 0;
+	  while (completionTimes.get(i) != null
+			  && completionTimes.get(i) < startTime + window) {
+		  initCompleted++;
+		  i++;
+	  }
+	  
+	  // Calculating number completed at the end within window
+	  int endCompleted = 0;
+	  i = completionTimes.size() - 1;
+	  while (completionTimes.get(i) != null
+			  && completionTimes.get(i) > haltDuration - window) {
+		  endCompleted++;
+		  i--;
+	  }
+	  
+	  return (double)endCompleted / (double)initCompleted;
   }
 
 

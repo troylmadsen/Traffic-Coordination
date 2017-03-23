@@ -58,7 +58,7 @@ public class Main {
 	  final int NUM_MODELS = 4;
 	  
 	  // Parameter variables
-	  int runNumber = -1;
+	  int runNumber = 0;
 	  boolean headless = false;
 	  double speedLimit = 25.0;
 	  int lanes = 1;
@@ -200,10 +200,9 @@ public class Main {
                           );
 
     /* Troy Madsen */
-    Viewer v;
     if (headless) {
-    	v = new Viewer(simSetup, false, true, modelNum, executionDuration,
-    			logFile);
+    	new Viewer(simSetup, false, true, modelNum, executionDuration, logFile,
+    			runNumber);
     }
     else {
     	new Viewer(simSetup);

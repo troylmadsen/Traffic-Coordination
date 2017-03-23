@@ -125,7 +125,7 @@ public class AutoDriverOnlySimulator implements Simulator {
   
   /* Troy Madsen */
   /** List of all vehicle completion times */
-  private LinkedList<Double> completionTimes;
+  private ArrayList<Double> completionTimes;
   /** Number of collisions that occurred */
   private int collisionCount;
 
@@ -149,7 +149,7 @@ public class AutoDriverOnlySimulator implements Simulator {
     totalBitsReceivedByCompletedVehicles = 0;
     
     /* Troy Madsen */
-    completionTimes = new LinkedList<Double>();
+    completionTimes = new ArrayList<Double>();
     collisionCount = 0;
   }
 
@@ -276,20 +276,30 @@ public class AutoDriverOnlySimulator implements Simulator {
   /**
    * Provides the completion times of all completed vehicles
    * 
-   * @return LinkedList of vehicle completion times
+   * @return ArrayList of vehicle completion times
    */
-  public LinkedList<Double> getCompletionTimes() {
+  public ArrayList<Double> getCompletionTimes() {
 	  return completionTimes;
   }
   
   /* Troy Madsen */
   /**
-   * Providse the number of collisions that occurred
+   * Provides the number of collisions that occurred
    * 
    * @return Number of collisions that occurred
    */
   public int getCollisionCount() {
 	  return collisionCount;
+  }
+  
+  /* Troy Madsen */
+  /**
+   * Provides number of active vehicles in simulator
+   * 
+   * @return Number of vehicles active in simulator
+   */
+  public int getNumActiveVehicles() {
+	  return vinToVehicles.size();
   }
 
 
@@ -553,12 +563,13 @@ public class AutoDriverOnlySimulator implements Simulator {
           
           // FIXME Needs to be optimized
           /* Troy Madsen */
-          if (!autoVehicle.getCollisionTracker().hadCollision()) {
+          if ((interval > 5)
+        		  && !autoVehicle.getCollisionTracker().hadCollision()) {
 		      for (VehicleSimView v: vinToVehicles.values()) {
 				  if (!v.equals(autoVehicle) && v.getShape()
 						  .intersects(autoVehicle.getShape().getBounds())) {
-					  //FIXME Testing
-					  System.out.println("Collision!");
+//					  //FIXME Testing
+//					  System.out.println("Collision!");
 					  
 					  //Notifying the first vehicle of the collision
 		        	  autoVehicle.getCollisionTracker()
