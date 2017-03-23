@@ -16,4 +16,5 @@ for m in ops[0]:
     for e in ops[1]:
         for d in ops[2]:
             for s in ops[3]:
-                os.system('java -ea -server -Xmx1000M -jar aim4-root/aim4.jar -headless -m ' + str(m) + ' -e ' + str(e) + ' -d ' + str(d) + ' -s ' + str(s) + ' -f "Model' + str(m) + '.log"')
+                for r in range(20):
+                    os.system('java -ea -server -Xmx1000M -jar aim4-root/aim4.jar -headless -r ' + str(r) + ' -m ' + str(m) + ' -e ' + str(e) + ' -d ' + str(d) + ' -s ' + str(s) + ' -f "Model' + str(m) + '.log"')
