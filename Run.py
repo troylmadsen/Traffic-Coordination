@@ -7,7 +7,7 @@ os.system('rm Model?.log')
 
 # Tuples to be run. Each is of the form [[Models], [Traffic Densities],
 # [Execution durations], [Speed Limits]].
-ops = [[1, 2, 3],
+ops = [[1, 2, 3, 4],
        [100, 200, 400, 800],
        [100, 500, 1500, 2500],
        [15, 25, 35]]

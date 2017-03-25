@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package aim4;
 
+import aim4.gui.SimSetupPanel;
 import aim4.gui.Viewer;
 import aim4.sim.setup.BasicSimSetup;
 import aim4.util.Util;
@@ -54,9 +55,6 @@ public class Main {
   public static void main(String[] args) {
 	  
 	  /* Troy Madsen */
-	  // Final values
-	  final int NUM_MODELS = 4;
-	  
 	  // Parameter variables
 	  int runNumber = 0;
 	  boolean headless = false;
@@ -168,10 +166,10 @@ public class Main {
 			  } else if (args[i].equals("-model") || args[i].equals("-m")) {
 				  modelNum = Integer.parseInt(args[++i]);
 				  
-				  if (NUM_MODELS <= modelNum || modelNum < 0) {
+				  if (SimSetupPanel.MODEL_COUNT <= modelNum || modelNum < 0) {
 					  throw new IllegalArgumentException("Specified model "
-							  + "must be between 0 and " + NUM_MODELS
-							  + " exclusive.");
+							  + "must be between 0 and "
+							  + SimSetupPanel.MODEL_COUNT + " exclusive.");
 				  }
 			  } else {
 				  throw new IllegalArgumentException("Parameter not known.");
