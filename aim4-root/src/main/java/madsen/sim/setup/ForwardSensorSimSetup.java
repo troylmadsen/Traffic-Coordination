@@ -1,21 +1,18 @@
-/*
- * Troy Madsen
- */
 package madsen.sim.setup;
 
+import sim.ForwardSensorSimulator;
 import aim4.config.Debug;
 import aim4.config.SimConfig;
 import aim4.driver.pilot.V2IPilot;
 import aim4.map.GridMap;
 import aim4.map.GridMapUtil;
-import aim4.sim.AutoDriverOnlySimulator;
 import aim4.sim.Simulator;
 import aim4.sim.setup.BasicSimSetup;
 import aim4.sim.setup.SimSetup;
 
 /**
  * The setup for the simulator in which there is no intersection control and
- * vehicles move freely.
+ * vehicles rely on their on-board sensor to avoid collisions.
  * 
  * @author Troy Madsen
  */
@@ -29,7 +26,7 @@ public class ForwardSensorSimSetup extends BasicSimSetup implements SimSetup{
 	////////////////////////////
 
 	/**
-	 * Create a setup for th esimulator in which there is no intersection
+	 * Create a setup for the simulator in which there is no intersection
 	 * control.
 	 * 
 	 * @param basicSimSetup  the basic simulator setup
@@ -39,7 +36,7 @@ public class ForwardSensorSimSetup extends BasicSimSetup implements SimSetup{
 	}
 
 	/**
-	 * Create a setup for th esimulator in which there is no intersection
+	 * Create a setup for the simulator in which there is no intersection
 	 * control.
 	 * 
 	 * @param columns                     the number of columns
@@ -125,6 +122,6 @@ public class ForwardSensorSimSetup extends BasicSimSetup implements SimSetup{
 		V2IPilot.DEFAULT_STOP_DISTANCE_BEFORE_INTERSECTION =
 				stopDistBeforeIntersection;
 
-		return new AutoDriverOnlySimulator(layout);
+		return new ForwardSensorSimulator(layout);
 	}
 }

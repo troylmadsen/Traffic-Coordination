@@ -241,6 +241,30 @@ public class BasicAutoVehicle extends BasicVehicle
    * A tracker responsible for reporting the collision status of the vehicle.
    */
   private CollisionTracker colTracker = new CollisionTracker();
+  
+  /**
+   * Troy Madsen
+   * 
+   * A gauge holding the distance, in meters, between p1 and p2, both of them
+   * are points on the target lane, where p1 is the point projected from the
+   * center of the front of the vehicle, and p2 is the nearest point of
+   * another vehicle 45 degrees from this vehicle to p1 on the target lane.
+   * If there is no vehicle 45 degrees from this vehicle, the value
+   * should be Double.MAX_VALUE.
+   */
+  private DoubleGauge frontRightVehicleDistanceSensor = new DoubleGauge();
+  
+  /**
+   * Troy Madsen
+   * 
+   * A gauge holding the distance, in meters, between p1 and p2, both of them
+   * are points on the target lane, where p1 is the point projected from the
+   * center of the front of the vehicle, and p2 is the nearest point of
+   * another vehicle -45 degrees from this vehicle to p1 on the target lane.
+   * If there is no vehicle 45 degrees from this vehicle, the value
+   * should be Double.MAX_VALUE.
+   */
+  private DoubleGauge frontLeftVehicleDistanceSensor = new DoubleGauge();
 
 
   /////////////////////////////////
@@ -452,6 +476,26 @@ public class BasicAutoVehicle extends BasicVehicle
   public DoubleGauge getRearVehicleSpeedSensor() {
     return rearVehicleSpeedSensor;
   }
+  
+  /* Troy Madsen */
+  /**
+   * Provides the front right distance sensor of the vehicle.
+   * 
+   * @return Front right sensor of the vehicle
+   */
+  public DoubleGauge getFrontRightVehicleDistanceSensor() {
+	  return frontRightVehicleDistanceSensor;
+  }
+  
+  /* Troy Madsen */
+  /**
+   * Provides the front right distance sensor of the vehicle.
+   * 
+   * @return Front right sensor of the vehicle
+   */
+  public DoubleGauge getFrontLeftVehicleDistanceSensor() {
+	  return frontLeftVehicleDistanceSensor;
+  }
 
 
   /////////////////////////////////
@@ -547,9 +591,11 @@ public class BasicAutoVehicle extends BasicVehicle
   
   
   
-  /** Troy Madsen */
+  /* Troy Madsen */
   /**
+   * Provides the collision tracker of this vehicle.
    * 
+   * @return Collision tracker of this vehicle
    */
   public CollisionTracker getCollisionTracker() {
 	  return colTracker;

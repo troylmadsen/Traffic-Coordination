@@ -13,10 +13,9 @@ import aim4.msg.v2i.Request;
 import aim4.sim.StatCollector;
 
 /**
- * The no-stop request handler.
+ * The forward sensor request handler.
  * 
  * @author Troy Madsen
- *
  */
 public class ForwardSensorRequestHandler implements RequestHandler{
 	/////////////////////////////////
