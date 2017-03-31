@@ -1,6 +1,6 @@
 package madsen.sim.setup;
 
-import sim.ForwardSensorSimulator;
+import madsen.sim.ForwardSensorSimulator;
 import aim4.config.Debug;
 import aim4.config.SimConfig;
 import aim4.driver.pilot.V2IPilot;
@@ -105,7 +105,7 @@ public class ForwardSensorSimSetup extends BasicSimSetup implements SimSetup{
 		Debug.SHOW_VEHICLE_COLOR_BY_MSG_STATE = false;
 
 //		/* Comment this */
-//		GridMapUtil.setNoStopManagers(layout, currentTime,
+//		GridMapUtil.setForwardSensorManagers(layout, currentTime,
 //				gridConfig);
 //		/* End */
 

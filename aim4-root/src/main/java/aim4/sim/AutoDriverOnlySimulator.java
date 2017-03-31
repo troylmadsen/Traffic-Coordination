@@ -110,10 +110,12 @@ public class AutoDriverOnlySimulator implements Simulator {
   // PRIVATE FIELDS
   /////////////////////////////////
 
+  /* Troy Madsen */
   /** The map */
-  private BasicMap basicMap;
+  protected BasicMap basicMap;
+  /* Troy Madsen */
   /** All active vehicles, in form of a map from VINs to vehicle objects. */
-  private Map<Integer,VehicleSimView> vinToVehicles;
+  protected Map<Integer,VehicleSimView> vinToVehicles;
   /** The current time */
   private double currentTime;
   /** The number of completed vehicles */
@@ -351,7 +353,9 @@ public class AutoDriverOnlySimulator implements Simulator {
    *
    * @param timeStep  the time step
    */
-  private void spawnVehicles(double timeStep) {
+  protected void spawnVehicles(double timeStep) {
+	  /* Troy Madsen */
+	  
     for(SpawnPoint spawnPoint : basicMap.getSpawnPoints()) {
       List<SpawnSpec> spawnSpecs = spawnPoint.act(timeStep);
       if (!spawnSpecs.isEmpty()) {
@@ -375,7 +379,9 @@ public class AutoDriverOnlySimulator implements Simulator {
    * @param spawnPoint  the spawn point
    * @return Whether the spawn point can spawn any vehicle
    */
-  private boolean canSpawnVehicle(SpawnPoint spawnPoint) {
+  protected boolean canSpawnVehicle(SpawnPoint spawnPoint) {
+	  /* Troy Madsen */
+	  
     // TODO: can be made much faster.
     Rectangle2D noVehicleZone = spawnPoint.getNoVehicleZone();
     for(VehicleSimView vehicle : vinToVehicles.values()) {
@@ -393,8 +399,10 @@ public class AutoDriverOnlySimulator implements Simulator {
    * @param spawnSpec   the spawn specification
    * @return the vehicle
    */
-  private VehicleSimView makeVehicle(SpawnPoint spawnPoint,
+  protected VehicleSimView makeVehicle(SpawnPoint spawnPoint,
                                      SpawnSpec spawnSpec) {
+	  /* Troy Madsen */
+	  
     VehicleSpec spec = spawnSpec.getVehicleSpec();
     Lane lane = spawnPoint.getLane();
     // Now just take the minimum of the max velocity of the vehicle, and
@@ -418,6 +426,8 @@ public class AutoDriverOnlySimulator implements Simulator {
     /* Troy Madsen */
     driver.setDestination(basicMap.getRoad(lane));
     vehicle.setDriver(driver);
+    vehicle.setTargetLaneForVehicleTracking(lane);
+    vehicle.setVehicleTracking(true);
 
     return vehicle;
   }
@@ -614,8 +624,10 @@ public class AutoDriverOnlySimulator implements Simulator {
    * @param vehicleLists  a mapping from lanes to lists of vehicles sorted by
    *                      their distance on their lanes
    */
-  private void provideVehicleTrackingInfo(
+  protected void provideVehicleTrackingInfo(
     Map<Lane, SortedMap<Double, VehicleSimView>> vehicleLists) {
+	  /* Troy Madsen */
+	  
     // Vehicle Tracking
     for(VehicleSimView vehicle: vinToVehicles.values()) {
       // If the vehicle is autonomous

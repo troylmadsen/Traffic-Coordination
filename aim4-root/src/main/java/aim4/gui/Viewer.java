@@ -1085,7 +1085,7 @@ public class Viewer extends JFrame implements ActionListener, KeyListener,
   private void handleDurationHalt() {
 	  // Pausing the simulation
 	  startButton.doClick();
-	  
+	  //TODO Added test for ForwardSensorSimulator
 	  // Verifying simulator type to retrieve data from and writing log
 	  if (sim instanceof AutoDriverOnlySimulator) {
 		  writeLogFile((AutoDriverOnlySimulator) sim);

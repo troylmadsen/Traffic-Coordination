@@ -63,6 +63,8 @@ public class NoIntersectionCoordinator implements Coordinator {
   public NoIntersectionCoordinator(AutoVehicleDriverView vehicle,
                                    AutoDriver driver) {
     pilot = new V2IPilot(vehicle, driver);
+    //FIXME
+    //vehicle.setVehicleTracking(true);
   }
 
 
