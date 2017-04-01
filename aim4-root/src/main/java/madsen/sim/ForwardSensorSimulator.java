@@ -177,8 +177,10 @@ public class ForwardSensorSimulator extends AutoDriverOnlySimulator {
         		  (SortedMap<Double, VehicleSimView>) new TreeMap<Double, VehicleSimView>();
           for (Entry<Lane, SortedMap<Double, VehicleSimView>> e:
         		  vehicleLists.entrySet()) {
-        	  if (e.getKey() != targetLane) {
-        		  vehiclesOnComingLane.putAll(e.getValue());
+        	  for (Entry<Double, VehicleSimView> v: e.getValue().entrySet()) {
+	        	  if (v.getValue() != vehicle) {
+	        		  vehiclesOnComingLane.put(v.getKey(), v.getValue());
+	        	  }
         	  }
           }
 
