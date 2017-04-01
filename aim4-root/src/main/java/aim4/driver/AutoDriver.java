@@ -32,7 +32,8 @@ package aim4.driver;
 
 import java.awt.geom.Area;
 
-import aim4.driver.coordinator.NoIntersectionCoordinator;
+import madsen.driver.coordinator.NoIntersectionCoordinator;
+
 import aim4.driver.coordinator.V2ICoordinator;
 import aim4.driver.coordinator.Coordinator;
 import aim4.im.IntersectionManager;

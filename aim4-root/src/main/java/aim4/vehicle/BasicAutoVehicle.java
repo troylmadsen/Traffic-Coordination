@@ -43,6 +43,8 @@ import aim4.map.lane.Lane;
 import aim4.msg.i2v.I2VMessage;
 import aim4.msg.v2i.V2IMessage;
 import aim4.noise.DoubleGauge;
+import aim4.noise.UniformFixedNoiseFunction;
+import aim4.noise.UniformProportionalNoiseFunction;
 
 
 /**
@@ -248,11 +250,12 @@ public class BasicAutoVehicle extends BasicVehicle
    * A gauge holding the distance, in meters, between p1 and p2, both of them
    * are points on the target lane, where p1 is the point projected from the
    * center of the front of the vehicle, and p2 is the nearest point of
-   * another vehicle 45 degrees from this vehicle to p1 on the target lane.
-   * If there is no vehicle 45 degrees from this vehicle, the value
+   * another vehicle -30 degrees from this vehicle to p1 on the target lane.
+   * If there is no vehicle -30 degrees from this vehicle, the value
    * should be Double.MAX_VALUE.
    */
-  private DoubleGauge frontRightVehicleDistanceSensor = new DoubleGauge();
+  private DoubleGauge frontRight30VehicleDistanceSensor = new DoubleGauge();
+//  private DoubleGauge frontRight30VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
   
   /**
    * Troy Madsen
@@ -261,10 +264,63 @@ public class BasicAutoVehicle extends BasicVehicle
    * are points on the target lane, where p1 is the point projected from the
    * center of the front of the vehicle, and p2 is the nearest point of
    * another vehicle -45 degrees from this vehicle to p1 on the target lane.
+   * If there is no vehicle -45 degrees from this vehicle, the value
+   * should be Double.MAX_VALUE.
+   */
+  private DoubleGauge frontRight45VehicleDistanceSensor = new DoubleGauge();
+//  private DoubleGauge frontRight45VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
+  
+  /**
+   * Troy Madsen
+   * 
+   * A gauge holding the distance, in meters, between p1 and p2, both of them
+   * are points on the target lane, where p1 is the point projected from the
+   * center of the front of the vehicle, and p2 is the nearest point of
+   * another vehicle -60 degrees from this vehicle to p1 on the target lane.
+   * If there is no vehicle -60 degrees from this vehicle, the value
+   * should be Double.MAX_VALUE.
+   */
+  private DoubleGauge frontRight60VehicleDistanceSensor = new DoubleGauge();
+//  private DoubleGauge frontRight60VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
+  
+  /**
+   * Troy Madsen
+   * 
+   * A gauge holding the distance, in meters, between p1 and p2, both of them
+   * are points on the target lane, where p1 is the point projected from the
+   * center of the front of the vehicle, and p2 is the nearest point of
+   * another vehicle 30 degrees from this vehicle to p1 on the target lane.
+   * If there is no vehicle 30 degrees from this vehicle, the value
+   * should be Double.MAX_VALUE.
+   */
+  private DoubleGauge frontLeft30VehicleDistanceSensor = new DoubleGauge();
+//  private DoubleGauge frontLeft30VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
+  
+  /**
+   * Troy Madsen
+   * 
+   * A gauge holding the distance, in meters, between p1 and p2, both of them
+   * are points on the target lane, where p1 is the point projected from the
+   * center of the front of the vehicle, and p2 is the nearest point of
+   * another vehicle 45 degrees from this vehicle to p1 on the target lane.
    * If there is no vehicle 45 degrees from this vehicle, the value
    * should be Double.MAX_VALUE.
    */
-  private DoubleGauge frontLeftVehicleDistanceSensor = new DoubleGauge();
+  private DoubleGauge frontLeft45VehicleDistanceSensor = new DoubleGauge();
+//  private DoubleGauge frontLeft45VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
+  
+  /**
+   * Troy Madsen
+   * 
+   * A gauge holding the distance, in meters, between p1 and p2, both of them
+   * are points on the target lane, where p1 is the point projected from the
+   * center of the front of the vehicle, and p2 is the nearest point of
+   * another vehicle 60 degrees from this vehicle to p1 on the target lane.
+   * If there is no vehicle 60 degrees from this vehicle, the value
+   * should be Double.MAX_VALUE.
+   */
+  private DoubleGauge frontLeft60VehicleDistanceSensor = new DoubleGauge();
+//  private DoubleGauge frontLeft60VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
 
 
   /////////////////////////////////
@@ -479,22 +535,56 @@ public class BasicAutoVehicle extends BasicVehicle
   
   /* Troy Madsen */
   /**
-   * Provides the front right distance sensor of the vehicle.
-   * 
-   * @return Front right sensor of the vehicle
+   * {@inheritDoc}
    */
-  public DoubleGauge getFrontRightVehicleDistanceSensor() {
-	  return frontRightVehicleDistanceSensor;
+  @Override
+  public DoubleGauge getFrontRight30VehicleDistanceSensor() {
+	  return frontRight30VehicleDistanceSensor;
   }
   
   /* Troy Madsen */
   /**
-   * Provides the front right distance sensor of the vehicle.
-   * 
-   * @return Front right sensor of the vehicle
+   * {@inheritDoc}
    */
-  public DoubleGauge getFrontLeftVehicleDistanceSensor() {
-	  return frontLeftVehicleDistanceSensor;
+  @Override
+  public DoubleGauge getFrontRight45VehicleDistanceSensor() {
+	  return frontRight45VehicleDistanceSensor;
+  }
+  
+  /* Troy Madsen */
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public DoubleGauge getFrontRight60VehicleDistanceSensor() {
+	  return frontRight60VehicleDistanceSensor;
+  }
+  
+  /* Troy Madsen */
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public DoubleGauge getFrontLeft30VehicleDistanceSensor() {
+	  return frontLeft30VehicleDistanceSensor;
+  }
+  
+  /* Troy Madsen */
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public DoubleGauge getFrontLeft45VehicleDistanceSensor() {
+	  return frontLeft45VehicleDistanceSensor;
+  }
+  
+  /* Troy Madsen */
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public DoubleGauge getFrontLeft60VehicleDistanceSensor() {
+	  return frontLeft60VehicleDistanceSensor;
   }
 
 

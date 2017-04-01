@@ -14,16 +14,23 @@ import java.util.NoSuchElementException;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import madsen.driver.ForwardSensorAutoDriver;
+
 import aim4.config.Debug;
 import aim4.config.DebugPoint;
+import aim4.driver.AutoDriver;
 import aim4.driver.DriverSimView;
 import aim4.map.BasicMap;
 import aim4.map.SpawnPoint;
 import aim4.map.SpawnPoint.SpawnSpec;
 import aim4.map.lane.Lane;
+import aim4.noise.DoubleGauge;
 import aim4.sim.AutoDriverOnlySimulator;
+import aim4.vehicle.AutoVehicleDriverView;
 import aim4.vehicle.AutoVehicleSimView;
+import aim4.vehicle.BasicAutoVehicle;
 import aim4.vehicle.VehicleSimView;
+import aim4.vehicle.VehicleSpec;
 import aim4.vehicle.VinRegistry;
 
 /**
@@ -132,6 +139,46 @@ public class ForwardSensorSimulator extends AutoDriverOnlySimulator {
       }
     }
   }
+  
+  /**
+   * Create a vehicle at a spawn point.
+   *
+   * @param spawnPoint  the spawn point
+   * @param spawnSpec   the spawn specification
+   * @return the vehicle
+   */
+  @Override
+  protected VehicleSimView makeVehicle(SpawnPoint spawnPoint,
+                                     SpawnSpec spawnSpec) {
+    VehicleSpec spec = spawnSpec.getVehicleSpec();
+    Lane lane = spawnPoint.getLane();
+    // Now just take the minimum of the max velocity of the vehicle, and
+    // the speed limit in the lane
+    double initVelocity = Math.min(spec.getMaxVelocity(), lane.getSpeedLimit());
+    // Obtain a Vehicle
+    AutoVehicleSimView vehicle =
+      new BasicAutoVehicle(spec,
+                           spawnPoint.getPosition(),
+                           spawnPoint.getHeading(),
+                           spawnPoint.getSteeringAngle(),
+                           initVelocity, // velocity
+                           initVelocity,  // target velocity
+                           spawnPoint.getAcceleration(),
+                           spawnSpec.getSpawnTime());
+    // Set the driver
+    ForwardSensorAutoDriver driver = new ForwardSensorAutoDriver(vehicle, basicMap);
+    driver.setCurrentLane(lane);
+    driver.setSpawnPoint(spawnPoint);
+    
+    /* Troy Madsen */
+    driver.setDestination(basicMap.getRoad(lane));
+    vehicle.setDriver(driver);
+    vehicle.setTargetLaneForVehicleTracking(lane);
+    vehicle.setVehicleTracking(true);
+
+    return vehicle;
+  }
+  
 
   /////////////////////////////////
   // STEP 2
@@ -164,15 +211,19 @@ public class ForwardSensorSimulator extends AutoDriverOnlySimulator {
           VehicleSimView frontVehicle = null ;
           VehicleSimView rearVehicle = null ;
           /* Troy Madsen */
-          VehicleSimView onComingRightVehicle = null;
-          VehicleSimView onComingLeftVehicle = null;
+          VehicleSimView onComingRight30Vehicle = null;
+          VehicleSimView onComingRight45Vehicle = null;
+          VehicleSimView onComingRight60Vehicle = null;
+          VehicleSimView onComingLeft30Vehicle = null;
+          VehicleSimView onComingLeft45Vehicle = null;
+          VehicleSimView onComingLeft60Vehicle = null;
 
           // only consider the vehicles on the target lane
           SortedMap<Double,VehicleSimView> vehiclesOnTargetLane =
             vehicleLists.get(targetLane);
           
           /* Troy Madsen */
-          // only consider the vehicles on the on-coming lane
+          // All vehicles in sim
           SortedMap<Double, VehicleSimView> vehiclesOnComingLane =
         		  (SortedMap<Double, VehicleSimView>) new TreeMap<Double, VehicleSimView>();
           for (Entry<Lane, SortedMap<Double, VehicleSimView>> e:
@@ -202,10 +253,17 @@ public class ForwardSensorSimulator extends AutoDriverOnlySimulator {
             rearVehicle = null;
           }
           /* Troy Madsen */
-          //TODO
           double heading = vehicle.getHeading();
           double vehicleX = vehicle.getPointAtMiddleFront(0).getX();
           double vehicleY = vehicle.getPointAtMiddleFront(0).getY();
+          // These must be cleared for new readings
+          ((AutoVehicleDriverView) vehicle).getFrontRight30VehicleDistanceSensor().record(Double.MAX_VALUE);
+          ((AutoVehicleDriverView) vehicle).getFrontRight45VehicleDistanceSensor().record(Double.MAX_VALUE);
+          ((AutoVehicleDriverView) vehicle).getFrontRight60VehicleDistanceSensor().record(Double.MAX_VALUE);
+          ((AutoVehicleDriverView) vehicle).getFrontLeft30VehicleDistanceSensor().record(Double.MAX_VALUE);
+          ((AutoVehicleDriverView) vehicle).getFrontLeft45VehicleDistanceSensor().record(Double.MAX_VALUE);
+          ((AutoVehicleDriverView) vehicle).getFrontLeft60VehicleDistanceSensor().record(Double.MAX_VALUE);
+          // Sensor detection lines
           Line2D right30Sensor = new Line2D.Double(
         		  vehicleX,
         		  vehicleY,
@@ -237,14 +295,31 @@ public class ForwardSensorSimulator extends AutoDriverOnlySimulator {
         		  vehicleX + Math.cos(heading - Math.PI/3) * sensorDistance,
         		  vehicleY + Math.sin(heading - Math.PI/3) * sensorDistance);
           for (Entry<Double, VehicleSimView> e: vehiclesOnComingLane.entrySet()) {
+        	  DoubleGauge g;
         	  // Check for vehicle detection on right side
         	  try {
 		          if (right30Sensor.intersects(e.getValue().getShape().getBounds2D())) {
-		        	  System.out.println("Right 30 detection " + vehicle.getVIN() + " " + e.getValue().getVIN());
+		        	  g = ((AutoVehicleDriverView) vehicle).getFrontRight30VehicleDistanceSensor();
+		        	  double distance = Math.sqrt(Math.pow(vehicleX - e.getValue().getCenterPoint().getX(), 2) + Math.pow(vehicleY - e.getValue().getCenterPoint().getY(), 2));
+		        	  if (distance < g.read()) {
+		        		  g.record(distance);
+		        		  //TODO Are these needed?
+		        		  onComingRight30Vehicle = e.getValue();
+		        	  }
 		          } else if (right45Sensor.intersects(e.getValue().getShape().getBounds2D())) {
-		        	  System.out.println("Right 45 detection " + vehicle.getVIN() + " " + e.getValue().getVIN());
+		        	  g = ((AutoVehicleDriverView) vehicle).getFrontRight45VehicleDistanceSensor();
+		        	  double distance = Math.sqrt(Math.pow(vehicleX - e.getValue().getCenterPoint().getX(), 2) + Math.pow(vehicleY - e.getValue().getCenterPoint().getY(), 2));
+		        	  if (distance < g.read()) {
+		        		  g.record(distance);
+		        		  onComingRight45Vehicle = e.getValue();
+		        	  }
 		          } else if (right60Sensor.intersects(e.getValue().getShape().getBounds2D())) {
-		        	  System.out.println("Right 60 detection " + vehicle.getVIN() + " " + e.getValue().getVIN());
+		        	  g = ((AutoVehicleDriverView) vehicle).getFrontRight60VehicleDistanceSensor();
+		        	  double distance = Math.sqrt(Math.pow(vehicleX - e.getValue().getCenterPoint().getX(), 2) + Math.pow(vehicleY - e.getValue().getCenterPoint().getY(), 2));
+		        	  if (distance < g.read()) {
+		        		  g.record(distance);
+		        		  onComingRight60Vehicle = e.getValue();
+		        	  }
 		          }
         	  } catch (NoSuchElementException ex) {
         		  System.out.println("Nothing right");
@@ -252,15 +327,51 @@ public class ForwardSensorSimulator extends AutoDriverOnlySimulator {
         	  // Checks for vehicle detection on left side
         	  try {
         		  if (left30Sensor.intersects(e.getValue().getShape().getBounds2D())) {
-	            	  System.out.println("Left 30 detection " + vehicle.getVIN() + " " + e.getValue().getVIN());
+        			  g = ((AutoVehicleDriverView) vehicle).getFrontLeft30VehicleDistanceSensor();
+		        	  double distance = Math.sqrt(Math.pow(vehicleX - e.getValue().getCenterPoint().getX(), 2) + Math.pow(vehicleY - e.getValue().getCenterPoint().getY(), 2));
+		        	  if (distance < g.read()) {
+		        		  g.record(distance);
+		        		  onComingLeft30Vehicle = e.getValue();
+		        	  }
 	              } else if (left45Sensor.intersects(e.getValue().getShape().getBounds2D())) {
-	            	  System.out.println("Left 45 detection " + vehicle.getVIN() + " " + e.getValue().getVIN());
+	            	  g = ((AutoVehicleDriverView) vehicle).getFrontLeft45VehicleDistanceSensor();
+		        	  double distance = Math.sqrt(Math.pow(vehicleX - e.getValue().getCenterPoint().getX(), 2) + Math.pow(vehicleY - e.getValue().getCenterPoint().getY(), 2));
+		        	  if (distance < g.read()) {
+		        		  g.record(distance);
+		        		  onComingLeft45Vehicle = e.getValue();
+		        	  }
 	              } else if (left60Sensor.intersects(e.getValue().getShape().getBounds2D())) {
-	            	  System.out.println("Left 60 detection " + vehicle.getVIN() + " " + e.getValue().getVIN());
+	            	  g = ((AutoVehicleDriverView) vehicle).getFrontLeft60VehicleDistanceSensor();
+		        	  double distance = Math.sqrt(Math.pow(vehicleX - e.getValue().getCenterPoint().getX(), 2) + Math.pow(vehicleY - e.getValue().getCenterPoint().getY(), 2));
+		        	  if (distance < g.read()) {
+		        		  g.record(distance);
+		        		  onComingLeft60Vehicle = e.getValue();
+		        	  }
 	              }
         	  } catch (NoSuchElementException ex) {
         		  System.out.println("Nothing left");
         	  }
+          }
+          
+          /* Troy Madsen */
+          // Announce detections
+          if (onComingRight30Vehicle != null) {
+        	  System.out.println("Right 30 detection " + vehicle.getVIN() + " " + onComingRight30Vehicle.getVIN());
+          }
+          if (onComingRight45Vehicle != null) {
+        	  System.out.println("Right 45 detection " + vehicle.getVIN() + " " + onComingRight45Vehicle.getVIN());
+          }
+          if (onComingRight60Vehicle != null) {
+        	  System.out.println("Right 60 detection " + vehicle.getVIN() + " " + onComingRight60Vehicle.getVIN());
+          }
+          if (onComingLeft30Vehicle != null) {
+        	  System.out.println("Left 30 detection " + vehicle.getVIN() + " " + onComingLeft30Vehicle.getVIN());
+          }
+          if (onComingLeft45Vehicle != null) {
+        	  System.out.println("Left 45 detection " + vehicle.getVIN() + " " + onComingLeft45Vehicle.getVIN());
+          }
+          if (onComingLeft60Vehicle != null) {
+        	  System.out.println("Left 60 detection " + vehicle.getVIN() + " " + onComingLeft60Vehicle.getVIN());
           }
           
           // assign the sensor readings

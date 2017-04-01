@@ -424,10 +424,9 @@ public class AutoDriverOnlySimulator implements Simulator {
     driver.setSpawnPoint(spawnPoint);
     
     /* Troy Madsen */
+    // Vehicle driving straight
     driver.setDestination(basicMap.getRoad(lane));
     vehicle.setDriver(driver);
-    vehicle.setTargetLaneForVehicleTracking(lane);
-    vehicle.setVehicleTracking(true);
 
     return vehicle;
   }

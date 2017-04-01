@@ -206,6 +206,54 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    * @return the speed of the vehicle behind on the target lane.
    */
   DoubleGauge getRearVehicleSpeedSensor();
+  
+  /* Troy Madsen */
+  /**
+   * Provides the front right 30 distance sensor of the vehicle.
+   * 
+   * @return Front right 30 sensor of the vehicle
+   */
+  DoubleGauge getFrontRight30VehicleDistanceSensor();
+  
+  /* Troy Madsen */
+  /**
+   * Provides the front right 45 distance sensor of the vehicle.
+   * 
+   * @return Front right 45 sensor of the vehicle
+   */
+  DoubleGauge getFrontRight45VehicleDistanceSensor();
+  
+  /* Troy Madsen */
+  /**
+   * Provides the front right 60 distance sensor of the vehicle.
+   * 
+   * @return Front right 60 sensor of the vehicle
+   */
+  DoubleGauge getFrontRight60VehicleDistanceSensor();
+  
+  /* Troy Madsen */
+  /**
+   * Provides the front left 30 distance sensor of the vehicle.
+   * 
+   * @return Front left 30 sensor of the vehicle
+   */
+  DoubleGauge getFrontLeft30VehicleDistanceSensor();
+  
+  /* Troy Madsen */
+  /**
+   * Provides the front left 45 distance sensor of the vehicle.
+   * 
+   * @return Front left 45 sensor of the vehicle
+   */
+  DoubleGauge getFrontLeft45VehicleDistanceSensor();
+  
+  /* Troy Madsen */
+  /**
+   * Provides the front left 60 distance sensor of the vehicle.
+   * 
+   * @return Front left 60 sensor of the vehicle
+   */
+  DoubleGauge getFrontLeft60VehicleDistanceSensor();
 
 
   /////////////////////////////////
