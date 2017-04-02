@@ -189,24 +189,24 @@ public class SimSetupPanel extends JPanel implements ItemListener {
     } else if (comboBox.getSelectedIndex() == 3) {
     	/* Troy Madsen */
     	NoStopSimSetup simSetup2 = new NoStopSimSetup(simSetup);
-    	simSetup2.setTrafficLevel(autoDriverOnlySetupPanel.getTrafficRate());
-        simSetup2.setSpeedLimit(autoDriverOnlySetupPanel.getSpeedLimit());
+    	simSetup2.setTrafficLevel(noStopSetupPanel.getTrafficRate());
+        simSetup2.setSpeedLimit(noStopSetupPanel.getSpeedLimit());
         simSetup2.setStopDistBeforeIntersection(
-          autoDriverOnlySetupPanel.getStopDistToIntersection());
-        simSetup2.setNumOfColumns(autoDriverOnlySetupPanel.getNumOfColumns());
-        simSetup2.setNumOfRows(autoDriverOnlySetupPanel.getNumOfRows());
-        simSetup2.setLanesPerRoad(autoDriverOnlySetupPanel.getLanesPerRoad());
+        		noStopSetupPanel.getStopDistToIntersection());
+        simSetup2.setNumOfColumns(noStopSetupPanel.getNumOfColumns());
+        simSetup2.setNumOfRows(noStopSetupPanel.getNumOfRows());
+        simSetup2.setLanesPerRoad(noStopSetupPanel.getLanesPerRoad());
         return simSetup2;
     } else if (comboBox.getSelectedIndex() == 4) {
     	/* Troy Madsen */
     	ForwardSensorSimSetup simSetup2 = new ForwardSensorSimSetup(simSetup);
-    	simSetup2.setTrafficLevel(autoDriverOnlySetupPanel.getTrafficRate());
-        simSetup2.setSpeedLimit(autoDriverOnlySetupPanel.getSpeedLimit());
+    	simSetup2.setTrafficLevel(forwardSensorSetupPanel.getTrafficRate());
+        simSetup2.setSpeedLimit(forwardSensorSetupPanel.getSpeedLimit());
         simSetup2.setStopDistBeforeIntersection(
-          autoDriverOnlySetupPanel.getStopDistToIntersection());
-        simSetup2.setNumOfColumns(autoDriverOnlySetupPanel.getNumOfColumns());
-        simSetup2.setNumOfRows(autoDriverOnlySetupPanel.getNumOfRows());
-        simSetup2.setLanesPerRoad(autoDriverOnlySetupPanel.getLanesPerRoad());
+        		forwardSensorSetupPanel.getStopDistToIntersection());
+        simSetup2.setNumOfColumns(forwardSensorSetupPanel.getNumOfColumns());
+        simSetup2.setNumOfRows(forwardSensorSetupPanel.getNumOfRows());
+        simSetup2.setLanesPerRoad(forwardSensorSetupPanel.getLanesPerRoad());
         return simSetup2;
     } else {
       throw new RuntimeException(

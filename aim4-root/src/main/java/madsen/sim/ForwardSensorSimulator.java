@@ -11,7 +11,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import madsen.driver.ForwardSensorAutoDriver;
-import madsen.noise.SmoothDoubleGauge;
 import aim4.config.Debug;
 import aim4.config.DebugPoint;
 import aim4.driver.DriverSimView;
