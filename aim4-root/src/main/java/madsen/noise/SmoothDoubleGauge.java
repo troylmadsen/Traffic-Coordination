@@ -155,7 +155,7 @@ public class SmoothDoubleGauge extends DoubleGauge {
 				invalidCount = 0;
 			}
 			else {
-				System.out.println("Invalid reading " + dValue + " " + value);
+//				System.out.println("Invalid reading " + dValue + " " + value);
 				invalidCount++;
 				if (invalidCount >= resetLimit) {
 					clear();

@@ -361,12 +361,24 @@ public class ForwardSensorSimulator extends AutoDriverOnlySimulator {
 					autoVehicle.getFrontVehicleDistanceSensor().record(frontDst);
 					autoVehicle.getRearVehicleDistanceSensor().record(rearDst);
 					/* Troy Madsen */
-					autoVehicle.getFrontRight30VehicleDistanceSensor().record(right30Value);
-					autoVehicle.getFrontRight45VehicleDistanceSensor().record(right45Value);
-					autoVehicle.getFrontRight60VehicleDistanceSensor().record(right60Value);
-					autoVehicle.getFrontLeft30VehicleDistanceSensor().record(left30Value);
-					autoVehicle.getFrontLeft45VehicleDistanceSensor().record(left45Value);
-					autoVehicle.getFrontLeft60VehicleDistanceSensor().record(left60Value);
+					if (right30Value <= sensorDistance) {
+			        	  autoVehicle.getFrontRight30VehicleDistanceSensor().record(right30Value);
+			          }
+			          if (right45Value <= sensorDistance) {
+			        	  autoVehicle.getFrontRight45VehicleDistanceSensor().record(right45Value);
+			          }
+			          if (right60Value <= sensorDistance) {
+			        	  autoVehicle.getFrontRight60VehicleDistanceSensor().record(right60Value);
+			          }
+			          if (left30Value <= sensorDistance) {
+			        	  autoVehicle.getFrontLeft30VehicleDistanceSensor().record(left30Value);
+			          }
+			          if (left45Value <= sensorDistance) {
+			        	  autoVehicle.getFrontLeft45VehicleDistanceSensor().record(left45Value);
+			          }
+			          if (left60Value <= sensorDistance) {
+			        	  autoVehicle.getFrontLeft60VehicleDistanceSensor().record(left60Value);
+			          }
 
 					/* Troy Madsen */
 					// Announce detections
