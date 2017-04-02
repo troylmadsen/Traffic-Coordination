@@ -1173,9 +1173,10 @@ ViewerDebugView {
 				endCompleted++;
 				i--;
 			}
+			return (double)endCompleted / (double)initCompleted;
 		}
 
-		return (double)endCompleted / (double)initCompleted;
+		return 0;
 	}
 
 
