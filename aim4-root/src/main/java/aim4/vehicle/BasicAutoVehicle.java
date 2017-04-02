@@ -37,14 +37,14 @@ import java.util.List;
 import java.util.Queue;
 
 import madsen.CollisionTracker;
+import madsen.noise.SmoothDoubleGauge;
 import aim4.config.Debug;
 import aim4.driver.AutoDriver;
 import aim4.map.lane.Lane;
 import aim4.msg.i2v.I2VMessage;
 import aim4.msg.v2i.V2IMessage;
 import aim4.noise.DoubleGauge;
-import aim4.noise.UniformFixedNoiseFunction;
-import aim4.noise.UniformProportionalNoiseFunction;
+import aim4.noise.GaussianNoiseFunction;
 
 
 /**
@@ -254,8 +254,8 @@ public class BasicAutoVehicle extends BasicVehicle
    * If there is no vehicle -30 degrees from this vehicle, the value
    * should be Double.MAX_VALUE.
    */
-  private DoubleGauge frontRight30VehicleDistanceSensor = new DoubleGauge();
-//  private DoubleGauge frontRight30VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
+  private SmoothDoubleGauge frontRight30VehicleDistanceSensor =
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
   
   /**
    * Troy Madsen
@@ -267,8 +267,8 @@ public class BasicAutoVehicle extends BasicVehicle
    * If there is no vehicle -45 degrees from this vehicle, the value
    * should be Double.MAX_VALUE.
    */
-  private DoubleGauge frontRight45VehicleDistanceSensor = new DoubleGauge();
-//  private DoubleGauge frontRight45VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
+  private SmoothDoubleGauge frontRight45VehicleDistanceSensor =
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
   
   /**
    * Troy Madsen
@@ -280,8 +280,8 @@ public class BasicAutoVehicle extends BasicVehicle
    * If there is no vehicle -60 degrees from this vehicle, the value
    * should be Double.MAX_VALUE.
    */
-  private DoubleGauge frontRight60VehicleDistanceSensor = new DoubleGauge();
-//  private DoubleGauge frontRight60VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
+  private SmoothDoubleGauge frontRight60VehicleDistanceSensor =
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
   
   /**
    * Troy Madsen
@@ -293,8 +293,8 @@ public class BasicAutoVehicle extends BasicVehicle
    * If there is no vehicle 30 degrees from this vehicle, the value
    * should be Double.MAX_VALUE.
    */
-  private DoubleGauge frontLeft30VehicleDistanceSensor = new DoubleGauge();
-//  private DoubleGauge frontLeft30VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
+  private SmoothDoubleGauge frontLeft30VehicleDistanceSensor =
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
   
   /**
    * Troy Madsen
@@ -306,8 +306,8 @@ public class BasicAutoVehicle extends BasicVehicle
    * If there is no vehicle 45 degrees from this vehicle, the value
    * should be Double.MAX_VALUE.
    */
-  private DoubleGauge frontLeft45VehicleDistanceSensor = new DoubleGauge();
-//  private DoubleGauge frontLeft45VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
+  private SmoothDoubleGauge frontLeft45VehicleDistanceSensor =
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
   
   /**
    * Troy Madsen
@@ -319,8 +319,8 @@ public class BasicAutoVehicle extends BasicVehicle
    * If there is no vehicle 60 degrees from this vehicle, the value
    * should be Double.MAX_VALUE.
    */
-  private DoubleGauge frontLeft60VehicleDistanceSensor = new DoubleGauge();
-//  private DoubleGauge frontLeft60VehicleDistanceSensor = new DoubleGauge(new UniformFixedNoiseFunction(0.1));
+  private SmoothDoubleGauge frontLeft60VehicleDistanceSensor =
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
 
 
   /////////////////////////////////
@@ -538,7 +538,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * {@inheritDoc}
    */
   @Override
-  public DoubleGauge getFrontRight30VehicleDistanceSensor() {
+  public SmoothDoubleGauge getFrontRight30VehicleDistanceSensor() {
 	  return frontRight30VehicleDistanceSensor;
   }
   
@@ -547,7 +547,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * {@inheritDoc}
    */
   @Override
-  public DoubleGauge getFrontRight45VehicleDistanceSensor() {
+  public SmoothDoubleGauge getFrontRight45VehicleDistanceSensor() {
 	  return frontRight45VehicleDistanceSensor;
   }
   
@@ -556,7 +556,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * {@inheritDoc}
    */
   @Override
-  public DoubleGauge getFrontRight60VehicleDistanceSensor() {
+  public SmoothDoubleGauge getFrontRight60VehicleDistanceSensor() {
 	  return frontRight60VehicleDistanceSensor;
   }
   
@@ -565,7 +565,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * {@inheritDoc}
    */
   @Override
-  public DoubleGauge getFrontLeft30VehicleDistanceSensor() {
+  public SmoothDoubleGauge getFrontLeft30VehicleDistanceSensor() {
 	  return frontLeft30VehicleDistanceSensor;
   }
   
@@ -574,7 +574,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * {@inheritDoc}
    */
   @Override
-  public DoubleGauge getFrontLeft45VehicleDistanceSensor() {
+  public SmoothDoubleGauge getFrontLeft45VehicleDistanceSensor() {
 	  return frontLeft45VehicleDistanceSensor;
   }
   
@@ -583,7 +583,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * {@inheritDoc}
    */
   @Override
-  public DoubleGauge getFrontLeft60VehicleDistanceSensor() {
+  public SmoothDoubleGauge getFrontLeft60VehicleDistanceSensor() {
 	  return frontLeft60VehicleDistanceSensor;
   }
 

@@ -37,23 +37,26 @@ import aim4.util.Util;
  * functions to incoming data to simulate a noisy gauge.
  */
 public class DoubleGauge {
-
+  /* Troy Madsen */
   /**
    * The actual value being measured by the gauge.
    */
-  private double value = 0;
+  protected double value = 0;
+  /* Troy Madsen */
   /**
    * The maximum value the gauge can read.
    */
-  private double maxValue = Double.MAX_VALUE;
+  protected double maxValue = Double.MAX_VALUE;
+  /* Troy Madsen */
   /**
    * The minimum value the gauge can read
    */
-  private double minValue = Double.MIN_VALUE;
+  protected double minValue = Double.MIN_VALUE;
+  /* Troy Madsen */
   /**
    * The function that determines how the gauge reads.
    */
-  private NoiseFunction noiseFunction = BasicNoiseFunction.noNoise;
+  protected NoiseFunction noiseFunction = BasicNoiseFunction.noNoise;
 
   // Constructors
   /**

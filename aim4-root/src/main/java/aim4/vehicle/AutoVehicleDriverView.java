@@ -33,6 +33,7 @@ package aim4.vehicle;
 import java.util.List;
 
 import madsen.CollisionTracker;
+import madsen.noise.SmoothDoubleGauge;
 import aim4.driver.AutoDriver;
 import aim4.map.lane.Lane;
 import aim4.msg.i2v.I2VMessage;
@@ -213,7 +214,7 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    * 
    * @return Front right 30 sensor of the vehicle
    */
-  DoubleGauge getFrontRight30VehicleDistanceSensor();
+  SmoothDoubleGauge getFrontRight30VehicleDistanceSensor();
   
   /* Troy Madsen */
   /**
@@ -221,7 +222,7 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    * 
    * @return Front right 45 sensor of the vehicle
    */
-  DoubleGauge getFrontRight45VehicleDistanceSensor();
+  SmoothDoubleGauge getFrontRight45VehicleDistanceSensor();
   
   /* Troy Madsen */
   /**
@@ -229,7 +230,7 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    * 
    * @return Front right 60 sensor of the vehicle
    */
-  DoubleGauge getFrontRight60VehicleDistanceSensor();
+  SmoothDoubleGauge getFrontRight60VehicleDistanceSensor();
   
   /* Troy Madsen */
   /**
@@ -237,7 +238,7 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    * 
    * @return Front left 30 sensor of the vehicle
    */
-  DoubleGauge getFrontLeft30VehicleDistanceSensor();
+  SmoothDoubleGauge getFrontLeft30VehicleDistanceSensor();
   
   /* Troy Madsen */
   /**
@@ -245,7 +246,7 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    * 
    * @return Front left 45 sensor of the vehicle
    */
-  DoubleGauge getFrontLeft45VehicleDistanceSensor();
+  SmoothDoubleGauge getFrontLeft45VehicleDistanceSensor();
   
   /* Troy Madsen */
   /**
@@ -253,7 +254,7 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    * 
    * @return Front left 60 sensor of the vehicle
    */
-  DoubleGauge getFrontLeft60VehicleDistanceSensor();
+  SmoothDoubleGauge getFrontLeft60VehicleDistanceSensor();
 
 
   /////////////////////////////////
