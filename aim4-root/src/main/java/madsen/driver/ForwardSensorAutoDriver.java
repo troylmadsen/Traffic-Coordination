@@ -90,7 +90,7 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 		
 		// Determining appropriate action to take
 		//TODO Add one for front collisions
-		if (left45 < 100 && right45 < 100 && responseCounter <= 0) {
+		if (left45 < 100 && right45 < 100 && responseCounter <= responseWait / 2) {
 			// Critical response
 			responseCounter = responseWait;
 			if (v < (this.getCurrentLane().getSpeedLimit() - maxSpeedReduction) || v < 0) {
@@ -98,7 +98,7 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 			}
 //			System.out.println("CLR45 -> " + v);
 			this.getVehicle().setTargetVelocityWithMaxAccel(v);
-		} else if (left45 < 100 && responseCounter <= 0) {
+		} else if (left45 < 100 && responseCounter <= responseWait / 2) {
 			// Critical response
 			// Usually speed up
 			responseCounter = responseWait;
@@ -108,7 +108,7 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 			}
 //			System.out.println("CL45 -> " + v);
 			this.getVehicle().setTargetVelocityWithMaxAccel(v);
-		} else if (right45 < 100 && responseCounter <= 0) {
+		} else if (right45 < 100 && responseCounter <= responseWait / 2) {
 			// Critical response
 			// Usually slow down
 			responseCounter = responseWait;
@@ -118,7 +118,7 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 			}
 //			System.out.println("CR45 -> " + v);
 			this.getVehicle().setTargetVelocityWithMaxAccel(v);
-		} else if (left30 < 60 || right30 < 60 && responseCounter <= 0) {
+		} else if (left30 < 60 || right30 < 60 && responseCounter <= responseWait / 2) {
 			// Critical response
 			// Usually slow down
 			responseCounter = responseWait;
@@ -128,7 +128,7 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 			}
 //			System.out.println("CLR30 -> " + v);
 			this.getVehicle().setTargetVelocityWithMaxAccel(v);
-		} else if (left60 < 45 || right60 < 45 && responseCounter <= 0) {
+		} else if (left60 < 45 || right60 < 45 && responseCounter <= responseWait / 2) {
 			// Critical response
 			// Usually speed up
 			responseCounter = responseWait;
