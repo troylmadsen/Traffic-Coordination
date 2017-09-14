@@ -128,8 +128,10 @@ public class AutoDriverOnlySimulator implements Simulator {
   /* Troy Madsen */
   /** List of all vehicle completion times */
   private ArrayList<Double> completionTimes;
-  /** Number of collisions that occurred */
-  private int collisionCount;
+  /** Number of non-rear end collisions that occurred */
+  private int nonRearCollisionCount;
+  /** Number of rear end collisions that occurred */
+  private int rearCollisionCount;
 
 
   /////////////////////////////////
@@ -152,7 +154,8 @@ public class AutoDriverOnlySimulator implements Simulator {
     
     /* Troy Madsen */
     completionTimes = new ArrayList<Double>();
-    collisionCount = 0;
+    nonRearCollisionCount = 0;
+    rearCollisionCount = 0;
   }
 
   /////////////////////////////////
@@ -286,12 +289,22 @@ public class AutoDriverOnlySimulator implements Simulator {
   
   /* Troy Madsen */
   /**
-   * Provides the number of collisions that occurred
+   * Provides the number of non-rear end collisions that occurred
    * 
-   * @return Number of collisions that occurred
+   * @return Number of non-rear end collisions that occurred
    */
-  public int getCollisionCount() {
-	  return collisionCount;
+  public int getNonRearCollisionCount() {
+	  return nonRearCollisionCount;
+  }
+  
+  /* Troy Madsen */
+  /**
+   * Provides the number of rear end collisions that occurred
+   * 
+   * @return Number of rear end collisions that occurred
+   */
+  public int getRearCollisionCount() {
+	  return rearCollisionCount;
   }
   
   /* Troy Madsen */
@@ -589,9 +602,14 @@ public class AutoDriverOnlySimulator implements Simulator {
 		        	  ((AutoVehicleSimView)v).getCollisionTracker()
 		        	  .notifyCollision(((AutoVehicleSimView)v).getVIN(),
 		        			  autoVehicle.getVIN());
-		        	  
-		        	  //Incrementign collision counter
-		        	  collisionCount++;
+		        	  double rearDist = ((AutoVehicleSimView)v).getRearVehicleDistanceSensor().read();
+		        	  if ( -0.1 <= rearDist && rearDist <= .1) {
+		        		  //Incrementing rear end collision counter
+		        		  System.out.println("!!!! Rear Ended!");
+		        	  } else {
+		        		  //Incrementing non-rear end collision counter
+		        		  System.out.println("!!!! I'm hit!");
+		        	  }
 				  }
 		      }
           }

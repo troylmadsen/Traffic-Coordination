@@ -1119,7 +1119,8 @@ ViewerDebugView {
 					+ initSimSetup.getSpeedLimit() + ", "
 					+ sim.getNumCompletedVehicles() + ", "
 					+ calcDegradation(sim) + ", "
-					+ sim.getCollisionCount() + "\n");
+					+ sim.getNonRearCollisionCount() + ", "
+					+ sim.getRearCollisionCount() + "\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
