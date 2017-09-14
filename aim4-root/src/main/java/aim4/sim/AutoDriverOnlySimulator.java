@@ -605,10 +605,10 @@ public class AutoDriverOnlySimulator implements Simulator {
 		        	  double rearDist = ((AutoVehicleSimView)v).getRearVehicleDistanceSensor().read();
 		        	  if ( -0.1 <= rearDist && rearDist <= .1) {
 		        		  //Incrementing rear end collision counter
-		        		  System.out.println("!!!! Rear Ended!");
+		        		  rearCollisionCount++;
 		        	  } else {
 		        		  //Incrementing non-rear end collision counter
-		        		  System.out.println("!!!! I'm hit!");
+		        		  nonRearCollisionCount++;
 		        	  }
 				  }
 		      }
