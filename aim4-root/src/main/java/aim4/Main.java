@@ -69,9 +69,9 @@ public class Main {
 	  double std = 7.0;
 	  double skewLeft = 9.0;
 	  double skewRight = -9.0;
-	  double minAdj = Double.MIN_VALUE;
-	  double maxAdj = Double.MAX_VALUE;
-	  double varMax = Double.MAX_VALUE;
+	  double maxRed = std * 2;
+	  double maxInc = std * 2;
+	  double varMax = std * 2;
 	  
 	  // Parsing command line for simulator setup
 	  /*
@@ -204,6 +204,7 @@ public class Main {
 					  throw new IllegalArgumentException("Delay time must be "
 							  + "greater than or equal to 0.");
 				  }
+				  Viewer.delayTime = delayTime;
 			  } else if (args[i].equals("-std") || args[i].equals("-D")) {
 				  std = Double.parseDouble(args[++i]);
 
@@ -211,16 +212,22 @@ public class Main {
 					  throw new IllegalArgumentException("Standard deviation "
 							  + "may not be less than 0.");
 				  }
+				  Viewer.std = std;
 			  } else if (args[i].equals("-skew-left") || args[i].equals("-L")) {
 				  skewLeft = Double.parseDouble(args[++i]);
+				  Viewer.skewLeft = skewLeft;
 			  } else if (args[i].equals("-skew-right") || args[i].equals("-R")) {
 				  skewRight = Double.parseDouble(args[++i]);
+				  Viewer.skewRight = skewRight;
 			  } else if (args[i].equals("-max-red") || args[i].equals("-M")) {
-				  minAdj = Double.parseDouble(args[++i]);
+				  maxRed = Double.parseDouble(args[++i]);
+				  Viewer.maxRed = maxRed;
 			  } else if (args[i].equals("-max-inc") || args[i].equals("-X")) {
-				  maxAdj = Double.parseDouble(args[++i]);
+				  maxInc = Double.parseDouble(args[++i]);
+				  Viewer.maxInc = maxInc;
 			  } else if (args[i].equals("-variation") || args[i].equals("-V")) {
 				  varMax = Double.parseDouble(args[++i]);
+				  Viewer.varMax = varMax;
 			  } else {
 				  throw new IllegalArgumentException("Parameter not known.");
 			  }
@@ -250,7 +257,8 @@ public class Main {
     /* Troy Madsen */
     if (headless) {
     	new Viewer(simSetup, false, true, modelNum, executionDuration, logFile,
-    			runNumber);
+    			runNumber, delayTime, std, skewLeft, skewRight, maxRed, maxInc,
+    			varMax);
     }
     else {
     	new Viewer(simSetup);

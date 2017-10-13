@@ -522,6 +522,7 @@ ViewerDebugView {
 		this(initSimSetup, false);
 	}
 
+	//TODO Remove this
 	/* Troy Madsen */
 	/**
 	 * Create a new viewer object. Allows for the starting of the simulator
@@ -540,8 +541,8 @@ ViewerDebugView {
 	 * 						vehicles
 	 * @param skewLeft		skew amount of a left-skewed curve
 	 * @param skewRight		skew amount of a right-skewed curve
-	 * @param minAdj		minimum speed a vehicle may adjust its speed to
-	 * @param maxAdj		maximum speed a vehicle may adjust its speed to
+	 * @param maxRed		minimum speed a vehicle may adjust its speed to
+	 * @param maxInc		maximum speed a vehicle may adjust its speed to
 	 * @param varMax 		maximum variation from the std that a vehicle may
 	 * 						adjust to
 	 */
@@ -549,7 +550,7 @@ ViewerDebugView {
 			final boolean isRunHeadless, final int modelIndex,
 			final int haltDuration, final String logFile, final int runNumber,
 			final double delayTime, final double std, final double skewLeft,
-			final double skewRight, final double minAdj, final double maxAdj,
+			final double skewRight, final double maxRed, final double maxInc,
 			final double varMax) {
 		super(TITLEBAR_STRING);
 		this.initSimSetup = initSimSetup;
@@ -585,9 +586,6 @@ ViewerDebugView {
 
 		// Setting the run number
 		this.runNumber = runNumber;
-		
-		// Setting the std
-		this.std = std;
 
 		// Lastly, schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
