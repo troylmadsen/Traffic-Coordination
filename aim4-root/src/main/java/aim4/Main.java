@@ -65,27 +65,39 @@ public class Main {
 	  String logFile = "Research_Log_Default";
 	  int executionDuration = 60;
 	  int modelNum = 3;
+	  double delayTime = 5.0; //TODO this needs to take a time value in milliseconds. Currently uses iterations
+	  double std = 7.0;
+	  double skewLeft = 9.0;
+	  double skewRight = -9.0;
+	  double minAdj = Double.MIN_VALUE;
+	  double maxAdj = Double.MAX_VALUE;
+	  double varMax = Double.MAX_VALUE;
 	  
 	  // Parsing command line for simulator setup
 	  /*
-	   * Help				-h -help				Displays help
-	   * Headless			-headless				Sets the simulator as
-	   * 											headless
-	   * Speed Limit		-s -speed-limit			Sets the speed limit
-	   * Lane Count			-l -lanes				Sets the number of lanes
-	   * Random seed		-r -random-seed			Sets the random seed
-	   * Signal Duration	-s -signal-duration		Sets the duration of stop
-	   * 											lights
-	   * Traffic Density	-d -traffic-density		Sets the traffic density
-	   * Log File			-f -log-file			Sets the name of the log
-	   * 											file
-	   * Execution Duration	-e -execution-duration	Sets the execution duration
-	   * Model				-m -model				Sets the simulator model
-	   * 											to run
+	   * Help					-h	-help				Displays help
+	   * Headless				-headless				Sets the simulator as headless
+	   * Speed Limit			-s	-speed-limit		Sets the speed limit
+	   * Lane Count				-l	-lanes				Sets the number of lanes
+	   * Random seed			-r	-random-seed		Sets the random seed
+	   * Signal Duration		-s	-signal-duration	Sets the duration of stop lights
+	   * Traffic Density		-d	-traffic-density	Sets the traffic density
+	   * Log File				-f	-log-file			Sets the name of the log file
+	   * Execution Duration		-e	-execution-duration	Sets the execution duration
+	   * Model					-m	-model				Sets the simulator model to run
+	   * Delay Time				-T	-delay-time			Sets the required delay time before
+	   * 												another sensor response may occur
+	   * Standard Deviation		-D	-std				Sets the standard deviation of the
+	   * 												speed adjustment curve
+	   * Skew Left				-L	-skew-left			Sets the skew of a left-skewed curve
+	   * Skew Right				-R	-skew-right			Sets the skew of a right-skewed curve
+	   * Maximum Reduction		-M	-max-red			Sets the maximum amount a vehicle can reduce its speed by
+	   * Maximum Increase		-X	-max-inc			Sets the maximum amount a vehicle can increase its speed by
+	   * Variation Max			-V	-variation			Sets the maximum variation in speed from
+	   * 												standard deviation
 	   */
 	  try {
 		  for (int i = 0; i < args.length; i++) {
-			  args[i] = args[i].toLowerCase();
 			  if (args[i].equals("-help") || args[i].equals("-h")) {
 				  System.out.println();
 				  System.out.println("Usage: aim4.jar [OPTION] [PARAMETER]...");
@@ -109,6 +121,20 @@ public class Main {
 						  + " of the simulator");
 				  System.out.println("  -m, -model\t\t\tSimulator model to"
 						  + " execute");
+				  System.out.println("  -T, -delay-time\t\tDelay between each"
+						  + " vehicle response to sensor readings");
+				  System.out.println("  -D, -std\t\t\tDeviation of vehicle"
+						  + " sensor response degree");
+				  System.out.println("  -L, -skew-left\t\tLeftward skew of"
+						  + " vehicle sensor response");
+				  System.out.println("  -R, -skew-right\t\tRightward skew of"
+						  + " vehicle sensor response");
+				  System.out.println("  -M, -max-red\t\t\tMaximum amount"
+						  + " a vehicle can reduce its speed by");
+				  System.out.println("  -X, -max-inc\t\t\tMaximum amount"
+						  + " a vehicle can increase its speed by");
+				  System.out.println("  -V, -variation\t\tMaximum variation"
+						  + " from standard deviation");
 				  System.out.println();
 				  System.out.println("Report bugs to <madsentr@mail.gvsu.edu>");
 				  System.exit(0);
@@ -171,6 +197,30 @@ public class Main {
 							  + "must be between 0 and "
 							  + SimSetupPanel.MODEL_COUNT + " exclusive.");
 				  }
+			  } else if (args[i].equals("-delay-time") || args[i].equals("-T")) {
+				  delayTime = Double.parseDouble(args[++i]);
+
+				  if (delayTime < 0) {
+					  throw new IllegalArgumentException("Delay time must be "
+							  + "greater than or equal to 0.");
+				  }
+			  } else if (args[i].equals("-std") || args[i].equals("-D")) {
+				  std = Double.parseDouble(args[++i]);
+
+				  if (std < 0) {
+					  throw new IllegalArgumentException("Standard deviation "
+							  + "may not be less than 0.");
+				  }
+			  } else if (args[i].equals("-skew-left") || args[i].equals("-L")) {
+				  skewLeft = Double.parseDouble(args[++i]);
+			  } else if (args[i].equals("-skew-right") || args[i].equals("-R")) {
+				  skewRight = Double.parseDouble(args[++i]);
+			  } else if (args[i].equals("-max-red") || args[i].equals("-M")) {
+				  minAdj = Double.parseDouble(args[++i]);
+			  } else if (args[i].equals("-max-inc") || args[i].equals("-X")) {
+				  maxAdj = Double.parseDouble(args[++i]);
+			  } else if (args[i].equals("-variation") || args[i].equals("-V")) {
+				  varMax = Double.parseDouble(args[++i]);
 			  } else {
 				  throw new IllegalArgumentException("Parameter not known.");
 			  }

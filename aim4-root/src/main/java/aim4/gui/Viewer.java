@@ -151,6 +151,43 @@ ViewerDebugView {
 	 * The inset size of the setup panels
 	 */
 	private static final int SIM_SETUP_PANE_GAP = 50;
+	
+	/* Troy Madsen */
+	//TODO These need to be moved into a class relevant only to ForwardSensor
+	/**
+	 * Delay in seconds that a vehicle should wait before responding to another stimulus
+	 */
+	public static double delayTime = 5.0;
+	
+	/**
+	 * Standard deviation of the speed adjustment curve.
+	 */
+	public static double std = 7.0;
+	
+	/**
+	 * Skew amount of a left-skewed curve.
+	 */
+	public static double skewLeft = 9.0;
+	
+	/**
+	 * Skew amount of a right-skewed curve.
+	 */
+	public static double skewRight = -9.0;
+	
+	/**
+	 * Maximum amount a vehicle can reduce its speed by.
+	 */
+	public static double maxRed = std * 2;
+	
+	/**
+	 * Maximum amount a vehicle can increase its speed by.
+	 */
+	public static double maxInc = std * 2;
+	
+	/**
+	 * Maximum variation from the std that a vehicle may adjust by.
+	 */
+	public static double varMax = std * 2;
 
 	/////////////////////////////////
 	// NESTED CLASSES
@@ -492,10 +529,28 @@ ViewerDebugView {
 	 *
 	 * @param initSimSetup  the initial simulation setup
 	 * @param isRunNow      whether or not the simulation is run immediately
+	 * @param isRunHeadless	starts the simulator without the GUI functional
+	 * @param modelIndex	the model number to execute
+	 * @param haltDuration	duration to halt simulation after
+	 * @param logFile		file to log output to
+	 * @param runNumber		run number to record with results
+	 * @param delayTime		delay in seconds that a vehicle should wait before
+	 * 						responding to another stimulus
+	 * @param std			Standard deviation of the speed adjustment curve of
+	 * 						vehicles
+	 * @param skewLeft		skew amount of a left-skewed curve
+	 * @param skewRight		skew amount of a right-skewed curve
+	 * @param minAdj		minimum speed a vehicle may adjust its speed to
+	 * @param maxAdj		maximum speed a vehicle may adjust its speed to
+	 * @param varMax 		maximum variation from the std that a vehicle may
+	 * 						adjust to
 	 */
 	public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow,
 			final boolean isRunHeadless, final int modelIndex,
-			final int haltDuration, final String logFile, final int runNumber) {
+			final int haltDuration, final String logFile, final int runNumber,
+			final double delayTime, final double std, final double skewLeft,
+			final double skewRight, final double minAdj, final double maxAdj,
+			final double varMax) {
 		super(TITLEBAR_STRING);
 		this.initSimSetup = initSimSetup;
 		this.sim = null;
@@ -530,6 +585,9 @@ ViewerDebugView {
 
 		// Setting the run number
 		this.runNumber = runNumber;
+		
+		// Setting the std
+		this.std = std;
 
 		// Lastly, schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
@@ -553,6 +611,28 @@ ViewerDebugView {
 			}
 
 		});
+	}
+	
+
+	/* Troy Madsen */
+	/**
+	 * Create a new viewer object. Allows for the starting of the simulator
+	 * immediately.
+	 *
+	 * @param initSimSetup  the initial simulation setup
+	 * @param isRunNow      whether or not the simulation is run immediately
+	 * @param isRunHeadless	starts the simulator without the GUI functional
+	 * @param modelIndex	the model number to execute
+	 * @param haltDuration	duration to halt simulation after
+	 * @param logFile		file to log output to
+	 * @param runNumber		run number to record with results
+	 */
+	public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow,
+			final boolean isRunHeadless, final int modelIndex,
+			final int haltDuration, final String logFile, final int runNumber) {
+		this(initSimSetup, isRunNow, isRunHeadless, modelIndex, haltDuration,
+				logFile, runNumber, delayTime, std, skewLeft, skewRight,
+				maxRed, maxInc, varMax);
 	}
 
 	/**
