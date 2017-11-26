@@ -2,6 +2,7 @@ f=aim4.jar
 g=target/AIM4-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 JAVA_OPTIONS= -ea -server -Xmx1000M
+HEADLESS_OPTIONS= -headless -r 0 -m 4 -e 800 -d 1500 -s 25 -f "Model_make.log"
 
 all: $(f)
 
@@ -26,4 +27,5 @@ clean:
 	rm -f $(f)
 	mvn clean
 
-
+headless:
+	java $(JAVA_OPTIONS) -jar $(f) $(HEADLESS_OPTIONS) &
