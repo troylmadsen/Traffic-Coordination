@@ -1193,7 +1193,7 @@ ViewerDebugView {
 			
 			// Creating a header for a new file
 			if ( isNewFile ) {
-				bw.write("Model Number, Traffic Density, Run Time, Speed Limit, Completed Vehicles, Degradation, Non-Rear Collisions, Rear Collisions");
+				bw.write("Model Number, Traffic Density, Run Time, Speed Limit, Completed Vehicles, Degradation, Non-Rear Collisions, Rear Collisions\n");
 			}
 			
 			bw.write(modelNumber + ", "
@@ -1209,7 +1209,9 @@ ViewerDebugView {
 			e.printStackTrace();
 		} finally {
 			try {
-				bw.close();
+				if (bw != null) {
+					bw.close();
+				}
 			} catch (IOException e) {
 				// Ignoring exceptions
 			}
