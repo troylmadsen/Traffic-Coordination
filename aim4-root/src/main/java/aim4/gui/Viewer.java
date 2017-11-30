@@ -1188,8 +1188,14 @@ ViewerDebugView {
 		BufferedWriter bw = null;
 		try {
 			File file = new File(logFile);
-			file.createNewFile();
+			boolean isNewFile = file.createNewFile();
 			bw = new BufferedWriter(new FileWriter(file, true));
+			
+			// Creating a header for a new file
+			if ( isNewFile ) {
+				bw.write("Model Number, Traffic Density, Run Time, Speed Limit, Completed Vehicles, Degradation, Non-Rear Collisions, Rear Collisions");
+			}
+			
 			bw.write(modelNumber + ", "
 					+ runNumber + ", " 
 					+ initSimSetup.getTrafficLevel() + ", "
