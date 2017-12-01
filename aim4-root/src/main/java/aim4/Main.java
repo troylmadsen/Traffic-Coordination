@@ -266,7 +266,7 @@ public class Main {
 			  } else if (args[i].equals("-decel-shift") || args[i].equals("-S")) {
 				  decelShift = Double.parseDouble(args[++i]);
 			  } else {
-				  throw new IllegalArgumentException("Parameter not known.");
+				  throw new IllegalArgumentException("Parameter <" + args[i] + "> not known.");
 			  }
 		  }
 	  }
