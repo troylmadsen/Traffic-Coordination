@@ -206,6 +206,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * The target lane for the vehicle tracking devices.
    */
   private Lane vehicleTrackingTargetLane = null;
+  /* Troy Madsen */
   /**
    * A gauge holding the distance, in meters, between p1 and p2, both of them
    * are points on the target lane, where p1 is the point projected from the
@@ -214,7 +215,8 @@ public class BasicAutoVehicle extends BasicVehicle
    * If there is no vehicle in the front on the target lane, the value
    * should be Double.MAX_VALUE.
    */
-  private DoubleGauge frontVehicleDistanceSensor = new DoubleGauge();
+  private SmoothDoubleGauge frontVehicleDistanceSensor = new SmoothDoubleGauge();
+  /* Troy Madsen */
   /**
    * A gauge holding the distance, in meters, between p1 and p2, both of them
    * are points on the target lane, where p1 is the point projected from the
@@ -223,7 +225,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * If there is no vehicle behind on the target lane, the value
    * should be Double.MAX_VALUE.
    */
-  private DoubleGauge rearVehicleDistanceSensor = new DoubleGauge();
+  private SmoothDoubleGauge rearVehicleDistanceSensor = new SmoothDoubleGauge();
   /**
    * A gauge holding the speed, in meters per second, of the vehicle in front
    * of the vehicle on the target lane.  If there is no vehicle in the front on
@@ -501,19 +503,21 @@ public class BasicAutoVehicle extends BasicVehicle
     return vehicleTrackingTargetLane;
   }
 
+  /* Troy Madsen */
   /**
    * {@inheritDoc}
    */
   @Override
-  public DoubleGauge getFrontVehicleDistanceSensor() {
+  public SmoothDoubleGauge getFrontVehicleDistanceSensor() {
     return frontVehicleDistanceSensor;
   }
 
+  /* Troy Madsen */
   /**
    * {@inheritDoc}
    */
   @Override
-  public DoubleGauge getRearVehicleDistanceSensor() {
+  public SmoothDoubleGauge getRearVehicleDistanceSensor() {
     return rearVehicleDistanceSensor;
   }
 

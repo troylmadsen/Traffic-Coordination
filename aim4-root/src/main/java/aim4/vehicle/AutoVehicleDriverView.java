@@ -175,7 +175,7 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    *
    * @return the distance of the vehicle in the front on the target lane.
    */
-  DoubleGauge getFrontVehicleDistanceSensor();
+  SmoothDoubleGauge getFrontVehicleDistanceSensor();
 
   /**
    * Get this Vehicle's gauge of sensors about the distance, in meters,
@@ -187,8 +187,9 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    *
    * @return the distance of the vehicle behind on the target lane.
    */
-  DoubleGauge getRearVehicleDistanceSensor();
+  SmoothDoubleGauge getRearVehicleDistanceSensor();
 
+  /* Troy Madsen */
   /**
    * Get this Vehicle's gauge of sensors about the speed, in meters per second,
    * of the vehicle in front of the vehicle on the target lane.  If there is no
@@ -199,6 +200,7 @@ public interface AutoVehicleDriverView extends VehicleDriverView {
    */
   DoubleGauge getFrontVehicleSpeedSensor();
 
+  /* Troy Madsen */
   /**
    * Get this Vehicle's gauge of sensors about the speed, in meters per second,
    * of the vehicle behind the vehicle on the target lane.  If there is no

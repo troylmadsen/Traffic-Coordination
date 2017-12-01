@@ -39,6 +39,64 @@ import aim4.util.Util;
  * The default main class to show the GUI.
  */
 public class Main {
+	
+  private static void printHelp() {
+	  System.out.println();
+	  System.out.println("Usage: aim4.jar [OPTION] [PARAMETER]...");
+	  System.out.println("Runs the AIM4 simulator.");
+	  System.out.println("  -h, -help\t\t\tUsage information");
+	  System.out.println("      -headless\t\t\tRuns the simulator"
+			  +" in headless mode");
+	  System.out.println("  -s, -speed-limit\t\tSpeed limit of the"
+			  + " simulator");
+	  System.out.println("  -l, -lanes\t\t\tNumber of road lanes");
+	  System.out.println("  -r, -random-seed\t\tSeed of the random"
+			  + " number generator");
+	  System.out.println("  -t, -signal-duration\t\tDuration of"
+			  + " traffic signals if they exist in the simulator"
+			  + " model");
+	  System.out.println("  -d, -traffic-density\t\tDensity of"
+			  + " traffic flow in simulator");
+	  System.out.println("  -f, -log-file\t\t\tFile to log data"
+			  + " to");
+	  System.out.println("  -e, -execution-duration\tRun duration"
+			  + " of the simulator");
+	  System.out.println("  -m, -model\t\t\tSimulator model to"
+			  + " execute");
+	  System.out.println("  -T, -delay-time\t\tDelay between each"
+			  + " vehicle response to sensor readings");
+	  System.out.println("  -U, -mean\t\t\tMean of vehicle speed"
+			  + " adjustment curve");
+	  System.out.println("  -D, -std\t\t\tStandard deviation of"
+			  + " vehicle speed adjustment curve");
+//	  System.out.println("  -L, -skew-left\t\tLeftward skew of"
+//			  + " vehicle sensor response");
+//	  System.out.println("  -R, -skew-right\t\tRightward skew of"
+//			  + " vehicle sensor response");
+	  System.out.println("  -N, -min-reduction\t\tMinimum amount"
+			  + " a vehicle can reduce its speed by");
+	  System.out.println("  -M, -max-reduction\t\tMaximum amount"
+			  + " a vehicle can reduce its speed by");
+	  System.out.println("  -Z, -min-increase\t\tMinimum amount"
+			  + " a vehicle can increase its speed by");
+	  System.out.println("  -X, -max-increase\t\tMaximum amount"
+			  + " a vehicle can increase its speed by");
+	  System.out.println("  -L, -speed-min\t\tMinimum speed"
+			  + " a vehicle may adjust its speed to");
+	  System.out.println("  -H, -speed-max\t\tMaximum speed"
+			  + " a vehicle may adjust its speed to");
+	  System.out.println("      -speed-relative\t\tSets the vehicle"
+			  + " speed adjustment curve to function relative to the"
+			  + " current speed of the vehicle");
+	  System.out.println("  -A, -accel-shift\t\tSets the shift amount"
+			  + " for the speed adjustment curve of acceleration-tending"
+			  + " operations");
+	  System.out.println("  -S, -decel-shift\t\tSets the shift amount"
+			  + " for the speed adjustment curve of deceleration-tending"
+			  + " operations");
+	  System.out.println();
+	  System.out.println("Report bugs to <madsentr@mail.gvsu.edu>");
+  }
 
   /////////////////////////////////
   // THE MAIN FUNCTION
@@ -66,77 +124,52 @@ public class Main {
 	  int executionDuration = 60;
 	  int modelNum = 3;
 	  double delayTime = 5.0; //TODO this needs to take a time value in milliseconds. Currently uses iterations
-	  double std = 7.0;
-	  double skewLeft = 9.0;
-	  double skewRight = -9.0;
-	  double maxRed = std * 2;
-	  double maxInc = std * 2;
-	  double varMax = std * 2;
+	  double mean = 0;
+	  double std = 10.0;
+	  double minRed = 0;
+	  double maxRed = Double.MAX_VALUE;
+	  double minInc = 0;
+	  double maxInc = Double.MAX_VALUE;
+	  double speedMin = 0;
+	  double speedMax = Double.MAX_VALUE;
+	  boolean speedRelative = false;
+	  double accelShift = 5;
+	  double decelShift = -5;
 	  
 	  // Parsing command line for simulator setup
 	  /*
 	   * Help					-h	-help				Displays help
-	   * Headless				-headless				Sets the simulator as headless
+	   * Headless					-headless			Sets the simulator as headless
 	   * Speed Limit			-s	-speed-limit		Sets the speed limit
 	   * Lane Count				-l	-lanes				Sets the number of lanes
 	   * Random seed			-r	-random-seed		Sets the random seed
-	   * Signal Duration		-s	-signal-duration	Sets the duration of stop lights
+	   * Signal Duration		-t	-signal-duration	Sets the duration of stop lights
 	   * Traffic Density		-d	-traffic-density	Sets the traffic density
 	   * Log File				-f	-log-file			Sets the name of the log file
 	   * Execution Duration		-e	-execution-duration	Sets the execution duration
 	   * Model					-m	-model				Sets the simulator model to run
 	   * Delay Time				-T	-delay-time			Sets the required delay time before
 	   * 												another sensor response may occur
+	   * Mean					-U	-mean				Sets the mean of the speed adjustment curve
 	   * Standard Deviation		-D	-std				Sets the standard deviation of the
 	   * 												speed adjustment curve
-	   * Skew Left				-L	-skew-left			Sets the skew of a left-skewed curve
-	   * Skew Right				-R	-skew-right			Sets the skew of a right-skewed curve
+	   * Minimum Reduction		-N	-min-red			Sets the minimum amount a vehicle can reduce its speed by
 	   * Maximum Reduction		-M	-max-red			Sets the maximum amount a vehicle can reduce its speed by
+	   * Minimum Increase		-Z	-min-inc			Sets the minimum amount a vehicle can increase its speed by
 	   * Maximum Increase		-X	-max-inc			Sets the maximum amount a vehicle can increase its speed by
-	   * Variation Max			-V	-variation			Sets the maximum variation in speed from
-	   * 												standard deviation
+	   * Speed Minimum			-L	-speed-min			Sets the minimum speed a vehicle may adjust its speed to
+	   * Speed Maximum			-H	-speed-max			Sets the maximum speed a vehicle may adjust its speed to
+	   * Speed Relative				-speed-relative		Sets vehicle speed adjustment curve to function relative to
+	   * 												current speed of the vehicle
+	   * Acceleration Shift		-A	-accel-shift		Sets the shift amount for the speed adjustment curve of
+	   * 												acceleration-tending operations
+	   * Deceleration Shift		-S	-decel-shift		Sets the shift amount for the speed adjustment curve of
+	   * 												deceleration-tending operations
 	   */
 	  try {
 		  for (int i = 0; i < args.length; i++) {
 			  if (args[i].equals("-help") || args[i].equals("-h")) {
-				  System.out.println();
-				  System.out.println("Usage: aim4.jar [OPTION] [PARAMETER]...");
-				  System.out.println("Runs the AIM4 simulator.");
-				  System.out.println("  -h, -help\t\t\tUsage information");
-				  System.out.println("      -headless\t\t\tRuns the simulator"
-						  +" in headless mode");
-				  System.out.println("  -s, -speed-limit\t\tSpeed limit of the"
-						  + " simulator");
-				  System.out.println("  -l, -lanes\t\t\tNumber of road lanes");
-				  System.out.println("  -r, -random-seed\t\tSeed of the random"
-						  + " number generator");
-				  System.out.println("  -s, -signal-duration\t\tDuration of"
-						  + " traffic signals if they exist in the simulator"
-						  + " model");
-				  System.out.println("  -d, -traffic-density\t\tDensity of"
-						  + " traffic flow in simulator");
-				  System.out.println("  -f, -log-file\t\t\tFile to log data"
-						  + " to");
-				  System.out.println("  -e, -execution-duration\tRun duration"
-						  + " of the simulator");
-				  System.out.println("  -m, -model\t\t\tSimulator model to"
-						  + " execute");
-				  System.out.println("  -T, -delay-time\t\tDelay between each"
-						  + " vehicle response to sensor readings");
-				  System.out.println("  -D, -std\t\t\tDeviation of vehicle"
-						  + " sensor response degree");
-				  System.out.println("  -L, -skew-left\t\tLeftward skew of"
-						  + " vehicle sensor response");
-				  System.out.println("  -R, -skew-right\t\tRightward skew of"
-						  + " vehicle sensor response");
-				  System.out.println("  -M, -max-red\t\t\tMaximum amount"
-						  + " a vehicle can reduce its speed by");
-				  System.out.println("  -X, -max-inc\t\t\tMaximum amount"
-						  + " a vehicle can increase its speed by");
-				  System.out.println("  -V, -variation\t\tMaximum variation"
-						  + " from standard deviation");
-				  System.out.println();
-				  System.out.println("Report bugs to <madsentr@mail.gvsu.edu>");
+				  printHelp();
 				  System.exit(0);
 			  } else if (args[i].equals("-headless")) {
 				  headless = true;
@@ -144,9 +177,9 @@ public class Main {
 					  || args[i].equals("-s")) {
 				  speedLimit = Double.parseDouble(args[++i]);
 				  
-				  if (80.0 < speedLimit || speedLimit < 0) {
+				  if (80.0 < speedLimit || speedLimit <= 0) {
 					  throw new IllegalArgumentException("Speed limit may " +
-							  "not be lower than 0 or greater then 80.0.");
+							  "not be lower than or equal to 0 or greater than 80.0.");
 				  }
 			  } else if (args[i].equals("-lanes") || args[i].equals("-l")) {
 				  lanes = Integer.parseInt(args[++i]);
@@ -162,7 +195,7 @@ public class Main {
 				  // Setting the random number generator
 				  Util.random.setSeed(runNumber);
 			  } else if (args[i].equals("-signal-duration")
-					  || args[i].equals("-s")) {
+					  || args[i].equals("-t")) {
 				  signalDuration = Double.parseDouble(args[++i]);
 				  
 				  if (signalDuration < 5.0) {
@@ -179,7 +212,7 @@ public class Main {
 					  throw new IllegalArgumentException("Traffic density must"
 							  + " be between 0 and 2500.");
 				  }
-			  } else if(args[i].equals("-log-file") || args[i].equals("-f")) {
+			  } else if (args[i].equals("-log-file") || args[i].equals("-f")) {
 				  logFile = args[++i];
 			  } else if (args[i].equals("-execution-duration")
 					  || args[i].equals("-e")) {
@@ -204,7 +237,9 @@ public class Main {
 					  throw new IllegalArgumentException("Delay time must be "
 							  + "greater than or equal to 0.");
 				  }
-				  Viewer.delayTime = delayTime;
+				  //FIXME implement this somewhere
+			  } else if (args[i].equals("-mean") || args[i].equals("-U")) {
+				  mean = Double.parseDouble(args[++i]);
 			  } else if (args[i].equals("-std") || args[i].equals("-D")) {
 				  std = Double.parseDouble(args[++i]);
 
@@ -212,22 +247,24 @@ public class Main {
 					  throw new IllegalArgumentException("Standard deviation "
 							  + "may not be less than 0.");
 				  }
-				  Viewer.std = std;
-			  } else if (args[i].equals("-skew-left") || args[i].equals("-L")) {
-				  skewLeft = Double.parseDouble(args[++i]);
-				  Viewer.skewLeft = skewLeft;
-			  } else if (args[i].equals("-skew-right") || args[i].equals("-R")) {
-				  skewRight = Double.parseDouble(args[++i]);
-				  Viewer.skewRight = skewRight;
-			  } else if (args[i].equals("-max-red") || args[i].equals("-M")) {
+			  } else if (args[i].equals("-min-reduction") || args[i].equals("-N")) {
+				  minRed = Double.parseDouble(args[++i]);
+			  } else if (args[i].equals("-max-reduction") || args[i].equals("-M")) {
 				  maxRed = Double.parseDouble(args[++i]);
-				  Viewer.maxRed = maxRed;
-			  } else if (args[i].equals("-max-inc") || args[i].equals("-X")) {
+			  } else if (args[i].equals("-min-increase") || args[i].equals("-Z")) {
+				  minInc = Double.parseDouble(args[++i]);
+			  } else if (args[i].equals("-max-increase") || args[i].equals("-X")) {
 				  maxInc = Double.parseDouble(args[++i]);
-				  Viewer.maxInc = maxInc;
-			  } else if (args[i].equals("-variation") || args[i].equals("-V")) {
-				  varMax = Double.parseDouble(args[++i]);
-				  Viewer.varMax = varMax;
+			  } else if (args[i].equals("-speed-min") || args[i].equals("-L")) {
+				  speedMin = Double.parseDouble(args[++i]);
+			  } else if (args[i].equals("-speed-max") || args[i].equals("-H")) {
+				  speedMax = Double.parseDouble(args[++i]);
+			  } else if (args[i].equals("-speed-relative")) {
+				  speedRelative = true;
+			  } else if (args[i].equals("-accel-shift") || args[i].equals("-A")) {
+				  accelShift = Double.parseDouble(args[++i]);
+			  } else if (args[i].equals("-decel-shift") || args[i].equals("-S")) {
+				  decelShift = Double.parseDouble(args[++i]);
 			  } else {
 				  throw new IllegalArgumentException("Parameter not known.");
 			  }
@@ -236,6 +273,7 @@ public class Main {
 	  catch (Exception e) {
 		  System.out.println("\nParameter Entry Error! "
 				  + e.getMessage());
+		  printHelp();
 		  System.exit(0);
 	  }
 	  
@@ -257,8 +295,8 @@ public class Main {
     /* Troy Madsen */
     if (headless) {
     	new Viewer(simSetup, false, true, modelNum, executionDuration, logFile,
-    			runNumber, delayTime, std, skewLeft, skewRight, maxRed, maxInc,
-    			varMax);
+    			runNumber, delayTime, mean, std, minRed, maxRed, minInc, maxInc,
+    			speedMin, speedMax, speedRelative, accelShift, decelShift);
     }
     else {
     	new Viewer(simSetup);

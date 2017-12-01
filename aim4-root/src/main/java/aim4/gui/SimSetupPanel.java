@@ -43,6 +43,7 @@ import javax.swing.JScrollPane;
 
 import madsen.sim.setup.ForwardSensorSimSetup;
 import madsen.sim.setup.NoStopSimSetup;
+import madsen.vehicle.SpeedControl;
 import aim4.gui.parampanel.AutoDriverOnlyParamPanel;
 import aim4.gui.parampanel.TrafficSignalParamPanel;
 import aim4.sim.setup.ApproxNPhasesTrafficSignalSimSetup;
@@ -68,9 +69,11 @@ public class SimSetupPanel extends JPanel implements ItemListener {
   /* Troy Madsen */
   /** This is the number of available models to select from */
   public final static int MODEL_COUNT = 5;
+  /** This is the {@link SpeedControl} for the {@link ForwardSensorSimulator} */
+  private SpeedControl speedControl;
 
-  /** The combox box */
-  private JComboBox comboBox;
+  /** The combo box */
+  private JComboBox<String> comboBox;
   /** The card panel */
   private JPanel cards; //a panel that uses CardLayout
   /** The card layout */
@@ -107,7 +110,7 @@ public class SimSetupPanel extends JPanel implements ItemListener {
         STOP_SIGN_SETUP_PANEL,
         NO_STOP_SETUP_PANEL,
         FORWARD_SENSOR_SETUP_PANEL };
-    comboBox = new JComboBox(comboBoxItems);
+    comboBox = new JComboBox<String>(comboBoxItems);
     comboBox.setEditable(false);
     comboBox.addItemListener(this);
     comboBoxPane.add(comboBox);
@@ -199,7 +202,7 @@ public class SimSetupPanel extends JPanel implements ItemListener {
         return simSetup2;
     } else if (comboBox.getSelectedIndex() == 4) {
     	/* Troy Madsen */
-    	ForwardSensorSimSetup simSetup2 = new ForwardSensorSimSetup(simSetup);
+    	ForwardSensorSimSetup simSetup2 = new ForwardSensorSimSetup(simSetup, speedControl);
     	simSetup2.setTrafficLevel(forwardSensorSetupPanel.getTrafficRate());
         simSetup2.setSpeedLimit(forwardSensorSetupPanel.getSpeedLimit());
         simSetup2.setStopDistBeforeIntersection(
@@ -223,6 +226,34 @@ public class SimSetupPanel extends JPanel implements ItemListener {
    */
   public void setModel(int modelIndex) {
 	  comboBox.setSelectedIndex(modelIndex);
+  }
+  
+  /* Troy Madsen */
+  /**
+   * Sets the speed controls for the {@link ForwardSensorSimSetup}
+   * 
+   * @param mean			Mean of the speed adjustment curve of vehicles
+   * @param std			Standard deviation of the speed adjustment curve of
+   * 						vehicles
+   * @param minRed		Minimum speed reduction of a vehicle
+   * @param maxRed		Maximum speed reduction of a vehicle
+   * @param minInc		Minimum speed increase of a vehicle
+   * @param maxInc		Maximum speed increase of a vehicle
+   * @param speedMin		Minimum speed a vehicle may be reduced to
+   * @param speedMax		Maximum speed a vehicle may be increased to
+   * @param speedRelative	Sets the speed adjustments to be made relative to
+   * 						the current speed of the vehicle
+   * @param accelShift	Sets the shift amount for the speed adjustment curve
+	 * 						of acceleration-tending operations
+	 * @param decelShift	Sets the shift amount for the speed adjustment curve
+	 * 						of deceleration-tending operations
+   */
+  public void setSpeedControls(final double mean, final double std,
+			final double minRed, final double maxRed, final double minInc,
+			final double maxInc, final double speedMin, final double speedMax,
+			final boolean speedRelative, final double accelShift,
+			final double decelShift) {
+	  speedControl = new SpeedControl(mean, std, minRed, maxRed, minInc, maxInc, speedMin, speedMax, speedRelative, accelShift, decelShift);
   }
 
   /**

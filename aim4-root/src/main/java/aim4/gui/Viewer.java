@@ -151,43 +151,6 @@ ViewerDebugView {
 	 * The inset size of the setup panels
 	 */
 	private static final int SIM_SETUP_PANE_GAP = 50;
-	
-	/* Troy Madsen */
-	//TODO These need to be moved into a class relevant only to ForwardSensor
-	/**
-	 * Delay in seconds that a vehicle should wait before responding to another stimulus
-	 */
-	public static double delayTime = 5.0;
-	
-	/**
-	 * Standard deviation of the speed adjustment curve.
-	 */
-	public static double std = 7.0;
-	
-	/**
-	 * Skew amount of a left-skewed curve.
-	 */
-	public static double skewLeft = 9.0;
-	
-	/**
-	 * Skew amount of a right-skewed curve.
-	 */
-	public static double skewRight = -9.0;
-	
-	/**
-	 * Maximum amount a vehicle can reduce its speed by.
-	 */
-	public static double maxRed = std * 2;
-	
-	/**
-	 * Maximum amount a vehicle can increase its speed by.
-	 */
-	public static double maxInc = std * 2;
-	
-	/**
-	 * Maximum variation from the std that a vehicle may adjust by.
-	 */
-	public static double varMax = std * 2;
 
 	/////////////////////////////////
 	// NESTED CLASSES
@@ -522,7 +485,6 @@ ViewerDebugView {
 		this(initSimSetup, false);
 	}
 
-	//TODO Remove this
 	/* Troy Madsen */
 	/**
 	 * Create a new viewer object. Allows for the starting of the simulator
@@ -537,21 +499,30 @@ ViewerDebugView {
 	 * @param runNumber		run number to record with results
 	 * @param delayTime		delay in seconds that a vehicle should wait before
 	 * 						responding to another stimulus
+	 * @param mean			Mean of the speed adjustment curve of vehicles
 	 * @param std			Standard deviation of the speed adjustment curve of
 	 * 						vehicles
-	 * @param skewLeft		skew amount of a left-skewed curve
-	 * @param skewRight		skew amount of a right-skewed curve
-	 * @param maxRed		minimum speed a vehicle may adjust its speed to
-	 * @param maxInc		maximum speed a vehicle may adjust its speed to
-	 * @param varMax 		maximum variation from the std that a vehicle may
-	 * 						adjust to
+	 * @param minRed		Minimum speed reduction of a vehicle
+	 * @param maxRed		Maximum speed reduction of a vehicle
+	 * @param minInc		Minimum speed increase of a vehicle
+	 * @param maxInc		Maximum speed increase of a vehicle
+	 * @param speedMin		Minimum speed a vehicle may be reduced to
+	 * @param speedMax		Maximum speed a vehicle may be increased to
+	 * @param speedRelative	Sets the speed adjustments to be made relative to
+	 * 						the current speed of the vehicle
+	 * @param accelShift	Sets the shift amount for the speed adjustment curve
+	 * 						of acceleration-tending operations
+	 * @param decelShift	Sets the shift amount for the speed adjustment curve
+	 * 						of deceleration-tending operations
 	 */
 	public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow,
 			final boolean isRunHeadless, final int modelIndex,
 			final int haltDuration, final String logFile, final int runNumber,
-			final double delayTime, final double std, final double skewLeft,
-			final double skewRight, final double maxRed, final double maxInc,
-			final double varMax) {
+			final double delayTime, final double mean, final double std,
+			final double minRed, final double maxRed, final double minInc,
+			final double maxInc, final double speedMin, final double speedMax,
+			final boolean speedRelative, final double accelShift,
+			final double decelShift) {
 		super(TITLEBAR_STRING);
 		this.initSimSetup = initSimSetup;
 		this.sim = null;
@@ -601,6 +572,9 @@ ViewerDebugView {
 
 				// Set the running model
 				simSetupPanel.setModel(modelIndex);
+				
+				// Set the speed controls
+				simSetupPanel.setSpeedControls(mean, std, minRed, maxRed, minInc, maxInc, speedMin, speedMax, speedRelative, accelShift, decelShift);
 
 				//Starting the simulator
 				if (isRunHeadless) {
@@ -611,7 +585,6 @@ ViewerDebugView {
 		});
 	}
 	
-
 	/* Troy Madsen */
 	/**
 	 * Create a new viewer object. Allows for the starting of the simulator
@@ -625,13 +598,13 @@ ViewerDebugView {
 	 * @param logFile		file to log output to
 	 * @param runNumber		run number to record with results
 	 */
-	public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow,
-			final boolean isRunHeadless, final int modelIndex,
-			final int haltDuration, final String logFile, final int runNumber) {
-		this(initSimSetup, isRunNow, isRunHeadless, modelIndex, haltDuration,
-				logFile, runNumber, delayTime, std, skewLeft, skewRight,
-				maxRed, maxInc, varMax);
-	}
+//	public Viewer(final BasicSimSetup initSimSetup, final boolean isRunNow,
+//			final boolean isRunHeadless, final int modelIndex,
+//			final int haltDuration, final String logFile, final int runNumber) {
+//		this(initSimSetup, isRunNow, isRunHeadless, modelIndex, haltDuration,
+//				logFile, runNumber, delayTime, std, skewLeft, skewRight,
+//				maxRed, maxInc, varMax);
+//	}
 
 	/**
 	 * Create a new viewer object.

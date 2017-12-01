@@ -3,9 +3,9 @@ package madsen.driver;
 import java.util.Random;
 
 import aim4.driver.AutoDriver;
-import aim4.gui.Viewer;
 import aim4.map.BasicMap;
 import aim4.vehicle.AutoVehicleDriverView;
+import madsen.vehicle.SpeedControl;
 
 /**
  * Functions identically to a {@link AutoDriver} with the added use of front
@@ -17,65 +17,80 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 
 	private static Random gaussian = new Random();
 
+	//FIXME replace this with a proper time counter
 	/**
 	 * Number of iterations that should be waited before attempting another
-	 * response to break an intersection deadlock.
+	 * response to break an intersection deadlock
 	 */
-	private double responseWait = Viewer.delayTime;
+	private double responseWait = 1;
 
+	//FIXME replace this with a proper time counter
 	/**
-	 * Number of iteration remaining before a non-critical response to sensor
+	 * Number of iterations remaining before a non-critical response to sensor
 	 * readings may be attempted again.
 	 */
 	private double responseCounter = 0;
 
 	/**
-	 * The standard deviation of the speed adjustment distribution.
+	 * Mean of the speed adjustment curve of vehicles
 	 */
-	private double std = Viewer.std;
-
-	/**
-	 * Added to the mean to create a pseudo-left skew.
-	 */
-	private double leftSkew = Viewer.skewLeft;
-
-	/**
-	 * Added to the mean to create a pseudo-right skew.
-	 */
-	private double rightSkew = Viewer.skewRight;
-
-	/**
-	 * The maximum amount the vehicle is allowed to slow down.
-	 */
-	private double maxSpeedReduction = std * 2;
-
-	/**
-	 * Maximum amount a vehicle can reduce its speed by.
-	 */
-	private double maxRed = Viewer.maxRed;
-
-	/**
-	 * Maximum amount a vehicle can increase its speed by.
-	 */
-	private double maxInc = Viewer.maxInc;
-
-	/**
-	 * Maximum variation from the std that a vehicle may adjust by.
-	 */
-	private double varMax = Viewer.varMax;
+	private double mean;
 	
 	/**
-	 * Minimum speed of this vehicle.
+	 * Standard deviation of the speed adjustment curve of vehicles
 	 */
-	private double minSpeed;
-	
-	/**
-	 * Maximum speed of this vehicle.
-	 */
-	private double maxSpeed;
+	private double std;
 
 	/**
-	 * A driver controlling a vehicle with forward peripheral sensors.
+	 * Minimum speed reduction of a vehicle
+	 */
+	private double minRed;
+
+	/**
+	 * Maximum speed reduction of a vehicle
+	 */
+	private double maxRed;
+
+	/**
+	 * Minimum speed increase of a vehicle
+	 */
+	private double minInc;
+	
+	/**
+	 * Maximum speed increase of a vehicle
+	 */
+	private double maxInc;
+
+	/**
+	 * Minimum speed a vehicle may be reduced to
+	 */
+	private double speedMin;
+	
+	/**
+	 * Maximum speed a vehicle may be increased to
+	 */
+	private double speedMax;
+	
+	//TODO Remove this
+	/**
+	 * Sets the speed adjustments to be made relative to the current speed of the vehicle
+	 */
+	private boolean speedRelative;
+	
+	/**
+	 * Sets the shift amount for the speed adjustment curve
+	 * of acceleration-tending operations
+	 */
+	 private double accelShift;
+	 
+	 /**
+		 * Sets the shift amount for the speed adjustment curve
+		 * of deceleration-tending operations
+		 */
+		 private double decelShift;
+
+	/**
+	 * Creates a driver controlling a vehicle with forward-facing peripheral sensors. Uses default speed adjustment behavior.
 	 * 
 	 * @param vehicle
 	 *            The vehicle this driver will control
@@ -85,6 +100,32 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 	public ForwardSensorAutoDriver(AutoVehicleDriverView vehicle,
 			BasicMap basicMap) {
 		super(vehicle, basicMap);
+		//TODO What was this previously?
+	}
+	
+	/**
+	 * Creates a driver controlling a vehicle with forward-facing peripheral sensors. Uses speed controls to create a gaussian curve for
+	 * selecting a new speed to adjust to when attempting to avoid collisions.
+	 * 
+	 * @param vehicle The vehicle this driver will control
+	 * @param basicMap The map the vehicle exists in
+	 * @param speedControl Speed controls that the vehicle will use
+	 */
+	public ForwardSensorAutoDriver(AutoVehicleDriverView vehicle,
+			BasicMap basicMap, SpeedControl speedControl) {
+		super(vehicle, basicMap);
+		
+		// Assigning speed control values
+		this.mean = speedControl.mean;
+		this.std = speedControl.std;
+		this.minRed = speedControl.minRed;
+		this.maxRed = speedControl.maxRed;
+		this.minInc = speedControl.minInc;
+		this.maxInc = speedControl.maxInc;
+		this.speedMin = speedControl.speedMin;
+		this.speedMax = speedControl.speedMax;
+		this.accelShift = speedControl.accelShift;
+		this.decelShift = speedControl.decelShift;
 	}
 
 	/**
@@ -103,7 +144,8 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 	 * speed to avoid collisions.
 	 */
 	private void respondToSensors() {
-		// Sensor readings
+		// Distance sensor readings
+		double front = getVehicle().getFrontVehicleDistanceSensor().read();
 		double left30 = getVehicle().getFrontLeft30VehicleDistanceSensor()
 				.read();
 		double left45 = getVehicle().getFrontLeft45VehicleDistanceSensor()
@@ -117,152 +159,159 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 		double right60 = getVehicle().getFrontRight60VehicleDistanceSensor()
 				.read();
 		
-		// Determine minimum speed
-		minSpeed = Math.max(this.getCurrentLane().getSpeedLimit() - maxRed, 1.0);
+		// Speed sensor readings
+		double frontSpeed = getVehicle().getFrontVehicleSpeedSensor().read();
 		
-		// Determine maximum speed
-		maxSpeed = this.getCurrentLane().getSpeedLimit() + maxInc;
+//		// Determine minimum speed
+//		speedMin = Math.max(this.getCurrentLane().getSpeedLimit() - maxRed, 1.0);
+		
+//		// Determine maximum speed
+//		speedMax = this.getCurrentLane().getSpeedLimit() + maxInc;
 
-		// Get a velocity variation within bounds
-		double random = std * gaussian.nextGaussian();
-		while (Math.abs(std - random) > varMax) {
-			random = std * gaussian.nextGaussian();
+		// Get a speed adjustment within bounds
+		double adjustment = gaussian.nextGaussian() * std + mean;
+		if (adjustment > 0) {
+			if (adjustment < minInc) {
+				adjustment = minInc;
+			} else if (adjustment > maxInc) {
+				adjustment = maxInc;
+			}
+		} else {
+			if (adjustment > minRed) {
+				adjustment = minRed;
+			} else if (adjustment < maxRed) {
+				adjustment = maxRed;
+			}
 		}
 
-		// Preemptively getting a random gaussian speed adjustment
-		// Getting new speed based on current speed to allow for better deadlock
-		// resolution
-		// double v = this.getCurrentLane().getSpeedLimit() + (std *
-		// gaussian.nextGaussian());
-		double velocity = this.getVehicle().gaugeVelocity() + random;
+		// Setting the new speed of the vehicle
+		double velocity = this.getVehicle().gaugeVelocity() + adjustment;
 
 		// Determining appropriate action to take
-		// TODO Add one for front collisions
-		if (left45 < 100 && right45 < 100 && responseCounter <= 0) {
+		if (front < 3) {
+			velocity = Math.max(1, frontSpeed - 2);
+		} else if (front < 10) {
+			velocity = frontSpeed;
+		} else if (left45 < 100 && right45 < 100) {
 			// Critical response
-			responseCounter = responseWait;
-			// Make sure vehicle speed is between minAdj and maxAdj
-			if (velocity < minSpeed || velocity <= 0) {
-				velocity = minSpeed;
-			} else if (velocity > maxSpeed) {
-				velocity = maxSpeed;
+			// Make sure vehicle speed is between speedMin and speedMax
+			if (velocity < speedMin || velocity <= 0) {
+				velocity = speedMin;
+			} else if (velocity > speedMax) {
+				velocity = speedMax;
 			}
 			//System.out.println("CLR45 -> " + velocity);
 			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
-		} else if (left45 < 100 && responseCounter <= 0) {
+		} else if (left45 < 100) {
 			// Critical response
 			// Usually speed up
-			responseCounter = responseWait;
-			velocity += leftSkew;
-			// Make sure vehicle speed is between minAdj and maxAdj
-			if (velocity < minSpeed || velocity <= 0) {
-				velocity = minSpeed;
-			} else if (velocity > maxSpeed) {
-				velocity = maxSpeed;
+			velocity += accelShift;
+			// Make sure vehicle speed is between speedMin and speedMax
+			if (velocity < speedMin || velocity <= 0) {
+				velocity = speedMin;
+			} else if (velocity > speedMax) {
+				velocity = speedMax;
 			}
 			//System.out.println("CL45 -> " + velocity);
 			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
-		} else if (right45 < 100 && responseCounter <= 0) {
+		} else if (right45 < 100) {
 			// Critical response
 			// Usually slow down
-			responseCounter = responseWait;
-			velocity += rightSkew;
-			// Make sure vehicle speed is between minAdj and maxAdj
-			if (velocity < minSpeed || velocity <= 0) {
-				velocity = minSpeed;
-			} else if (velocity > maxSpeed) {
-				velocity = maxSpeed;
+			velocity += decelShift;
+			// Make sure vehicle speed is between speedMin and speedMax
+			if (velocity < speedMin || velocity <= 0) {
+				velocity = speedMin;
+			} else if (velocity > speedMax) {
+				velocity = speedMax;
 			}
 			//System.out.println("CR45 -> " + velocity);
 			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
-		} else if (left30 < 60 || right30 < 60 && responseCounter <= 0) {
+		} else if (left30 < 60 || right30 < 60) {
 			// Critical response
 			// Usually slow down
-			responseCounter = responseWait;
-			velocity += rightSkew;
-			// Make sure vehicle speed is between minAdj and maxAdj
-			if (velocity < minSpeed || velocity <= 0) {
-				velocity = minSpeed;
-			} else if (velocity > maxSpeed) {
-				velocity = maxSpeed;
+			velocity += decelShift;
+			// Make sure vehicle speed is between speedMin and speedMax
+			if (velocity < speedMin || velocity <= 0) {
+				velocity = speedMin;
+			} else if (velocity > speedMax) {
+				velocity = speedMax;
 			}
 			//System.out.println("CLR30 -> " + velocity);
 			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
-		} else if (left60 < 45 || right60 < 45 && responseCounter <= 0) {
+		} else if (left60 < 45 || right60 < 45) {
 			// Critical response
 			// Usually speed up
-			responseCounter = responseWait;
-			velocity += leftSkew;
-			// Make sure vehicle speed is between minAdj and maxAdj
-			if (velocity < minSpeed || velocity <= 0) {
-				velocity = minSpeed;
-			} else if (velocity > maxSpeed) {
-				velocity = maxSpeed;
+			velocity += accelShift;
+			// Make sure vehicle speed is between speedMin and speedMax
+			if (velocity < speedMin || velocity <= 0) {
+				velocity = speedMin;
+			} else if (velocity > speedMax) {
+				velocity = speedMax;
 			}
 			//System.out.println("CLR60 -> " + velocity);
 			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
-		} else if (left45 < 200 && right45 < 200 && responseCounter <= 0) {
-			responseCounter = responseWait;
-			// Make sure vehicle speed is between minAdj and maxAdj
-			if (velocity < minSpeed || velocity <= 0) {
-				velocity = minSpeed;
-			} else if (velocity > maxSpeed) {
-				velocity = maxSpeed;
+		} else if (left45 < 200 && right45 < 200) {
+			// Make sure vehicle speed is between speedMin and speedMax
+			if (velocity < speedMin || velocity <= 0) {
+				velocity = speedMin;
+			} else if (velocity > speedMax) {
+				velocity = speedMax;
 			}
 			 //System.out.println("LR45 -> " + velocity);
 			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
-		} else if (left45 < 200 && responseCounter <= 0) {
+		} else if (left45 < 200) {
 			// Usually speed up
-			responseCounter = responseWait;
-			velocity += leftSkew;
-			// Make sure vehicle speed is between minAdj and maxAdj
-			if (velocity < minSpeed || velocity <= 0) {
-				velocity = minSpeed;
-			} else if (velocity > maxSpeed) {
-				velocity = maxSpeed;
+			velocity += accelShift;
+			// Make sure vehicle speed is between speedMin and speedMax
+			if (velocity < speedMin || velocity <= 0) {
+				velocity = speedMin;
+			} else if (velocity > speedMax) {
+				velocity = speedMax;
 			}
 			//System.out.println("L45 -> " + velocity);
 			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
-		} else if (right45 < 200 && responseCounter <= 0) {
+		} else if (right45 < 200) {
 			// Usually slow down
-			responseCounter = responseWait;
-			velocity += rightSkew;
-			// Make sure vehicle speed is between minAdj and maxAdj
-			if (velocity < minSpeed || velocity <= 0) {
-				velocity = minSpeed;
-			} else if (velocity > maxSpeed) {
-				velocity = maxSpeed;
+			velocity += decelShift;
+			// Make sure vehicle speed is between speedMin and speedMax
+			if (velocity < speedMin || velocity <= 0) {
+				velocity = speedMin;
+			} else if (velocity > speedMax) {
+				velocity = speedMax;
 			}
 			//System.out.println("R45 -> " + velocity);
 			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
-		} else if ((left30 < 120 || right30 < 120) && responseCounter <= 0) {
+		} else if ((left30 < 120 || right30 < 120)) {
 			// Usually slow down
-			responseCounter = responseWait;
-			velocity += rightSkew;
-			// Make sure vehicle speed is between minAdj and maxAdj
-			if (velocity < minSpeed || velocity <= 0) {
-				velocity = minSpeed;
-			} else if (velocity > maxSpeed) {
-				velocity = maxSpeed;
+			velocity += decelShift;
+			// Make sure vehicle speed is between speedMin and speedMax
+			if (velocity < speedMin || velocity <= 0) {
+				velocity = speedMin;
+			} else if (velocity > speedMax) {
+				velocity = speedMax;
 			}
 			//System.out.println("LR30 -> " + velocity);
 			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
-		} else if ((left60 < 90 || right60 < 90) && responseCounter <= 0) {
+		} else if ((left60 < 90 || right60 < 90)) {
 			// Usually speed up
-			responseCounter = responseWait;
-			velocity += leftSkew;
-			// Make sure vehicle speed is between minAdj and maxAdj
-			if (velocity < minSpeed || velocity <= 0) {
-				velocity = minSpeed;
-			} else if (velocity > maxSpeed) {
-				velocity = maxSpeed;
+			velocity += accelShift;
+			// Make sure vehicle speed is between speedMin and speedMax
+			if (velocity < speedMin || velocity <= 0) {
+				velocity = speedMin;
+			} else if (velocity > speedMax) {
+				velocity = speedMax;
 			}
 			//System.out.println("LR60 -> " + velocity);
 			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
-		} else if (responseCounter <= 0) {
+		} else {
 			// Reset speed
-			this.getVehicle().setTargetVelocityWithMaxAccel(
-					this.getCurrentLane().getSpeedLimit());
+			velocity = this.getCurrentLane().getSpeedLimit();
+		}
+		
+		// Adjust speed and reset wait timer
+		if (responseCounter <= 0) {
+			responseCounter = responseWait;
+			this.getVehicle().setTargetVelocityWithMaxAccel(velocity);
 		}
 
 		responseCounter--;

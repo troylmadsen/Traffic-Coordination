@@ -1,6 +1,7 @@
 package madsen.sim.setup;
 
 import madsen.sim.ForwardSensorSimulator;
+import madsen.vehicle.SpeedControl;
 import aim4.config.Debug;
 import aim4.config.SimConfig;
 import aim4.driver.pilot.V2IPilot;
@@ -20,6 +21,9 @@ public class ForwardSensorSimSetup extends BasicSimSetup implements SimSetup{
 
 	/** The name of the file containing the traffic volume data */
 	private String trafficVolumeFileName = null;
+	
+	/** This is the {@link SpeedControl} for the {@link ForwardSensorSimulator} */
+	private SpeedControl speedControl;
 
 	////////////////////////////
 	// CONSTRUCTORS
@@ -31,8 +35,9 @@ public class ForwardSensorSimSetup extends BasicSimSetup implements SimSetup{
 	 * 
 	 * @param basicSimSetup  the basic simulator setup
 	 */
-	public ForwardSensorSimSetup(BasicSimSetup basicSimSetup) {
+	public ForwardSensorSimSetup(BasicSimSetup basicSimSetup, SpeedControl speedControl) {
 		super(basicSimSetup);
+		this.speedControl = speedControl;
 	}
 
 	/**
@@ -122,6 +127,6 @@ public class ForwardSensorSimSetup extends BasicSimSetup implements SimSetup{
 		V2IPilot.DEFAULT_STOP_DISTANCE_BEFORE_INTERSECTION =
 				stopDistBeforeIntersection;
 
-		return new ForwardSensorSimulator(layout);
+		return new ForwardSensorSimulator(layout, speedControl);
 	}
 }
