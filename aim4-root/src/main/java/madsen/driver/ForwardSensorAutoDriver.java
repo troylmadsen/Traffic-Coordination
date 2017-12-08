@@ -177,10 +177,10 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 				adjustment = maxInc;
 			}
 		} else {
-			if (adjustment > minRed) {
-				adjustment = minRed;
-			} else if (adjustment < maxRed) {
-				adjustment = maxRed;
+			if (Math.abs(adjustment) < minRed) {
+				adjustment = minRed * -1;
+			} else if (Math.abs(adjustment) > maxRed) {
+				adjustment = maxRed * -1;
 			}
 		}
 
