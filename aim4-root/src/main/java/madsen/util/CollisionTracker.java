@@ -1,5 +1,5 @@
 
-package madsen;
+package madsen.util;
 
 /**
  * A tracker to notify vehicles of collisions occurring between one another and

@@ -31,8 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package aim4.vehicle;
 
 import java.util.List;
-
-import madsen.CollisionTracker;
+import madsen.util.CollisionTracker;
 import madsen.noise.SmoothDoubleGauge;
 import aim4.driver.AutoDriver;
 import aim4.map.lane.Lane;

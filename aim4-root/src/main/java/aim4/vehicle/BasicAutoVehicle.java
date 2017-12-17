@@ -36,7 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import madsen.CollisionTracker;
+import madsen.util.CollisionTracker;
 import madsen.noise.SmoothDoubleGauge;
 import aim4.config.Debug;
 import aim4.driver.AutoDriver;
