@@ -685,10 +685,10 @@ public class AutoDriverOnlySimulator implements Simulator {
             rearVehicle = null;
           }
 
-          // assign the sensor readings
-
-          autoVehicle.getFrontVehicleDistanceSensor().record(frontDst);
-          autoVehicle.getRearVehicleDistanceSensor().record(rearDst);
+          //FIXME Removed these because they are believed to be redundant
+//          // assign the sensor readings
+//          autoVehicle.getFrontVehicleDistanceSensor().record(frontDst);
+//          autoVehicle.getRearVehicleDistanceSensor().record(rearDst);
 
           // assign the vehicles' velocities
 
@@ -698,6 +698,7 @@ public class AutoDriverOnlySimulator implements Simulator {
           } else {
             autoVehicle.getFrontVehicleSpeedSensor().record(Double.MAX_VALUE);
           }
+          
           if(rearVehicle!=null) {
             autoVehicle.getRearVehicleSpeedSensor().record(
                 rearVehicle.getVelocity());

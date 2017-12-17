@@ -215,7 +215,8 @@ public class BasicAutoVehicle extends BasicVehicle
    * If there is no vehicle in the front on the target lane, the value
    * should be Double.MAX_VALUE.
    */
-  private SmoothDoubleGauge frontVehicleDistanceSensor = new SmoothDoubleGauge();
+  private SmoothDoubleGauge frontVehicleDistanceSensor =
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 1000.0);
   /* Troy Madsen */
   /**
    * A gauge holding the distance, in meters, between p1 and p2, both of them
@@ -225,7 +226,8 @@ public class BasicAutoVehicle extends BasicVehicle
    * If there is no vehicle behind on the target lane, the value
    * should be Double.MAX_VALUE.
    */
-  private SmoothDoubleGauge rearVehicleDistanceSensor = new SmoothDoubleGauge();
+  private SmoothDoubleGauge rearVehicleDistanceSensor =
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 1000.0);
   /**
    * A gauge holding the speed, in meters per second, of the vehicle in front
    * of the vehicle on the target lane.  If there is no vehicle in the front on
@@ -257,7 +259,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * should be Double.MAX_VALUE.
    */
   private SmoothDoubleGauge frontRight30VehicleDistanceSensor =
-		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 1000.0);
   
   /**
    * Troy Madsen
@@ -270,7 +272,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * should be Double.MAX_VALUE.
    */
   private SmoothDoubleGauge frontRight45VehicleDistanceSensor =
-		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 1000.0);
   
   /**
    * Troy Madsen
@@ -283,7 +285,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * should be Double.MAX_VALUE.
    */
   private SmoothDoubleGauge frontRight60VehicleDistanceSensor =
-		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 1000.0);
   
   /**
    * Troy Madsen
@@ -296,7 +298,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * should be Double.MAX_VALUE.
    */
   private SmoothDoubleGauge frontLeft30VehicleDistanceSensor =
-		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 1000.0);
   
   /**
    * Troy Madsen
@@ -309,7 +311,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * should be Double.MAX_VALUE.
    */
   private SmoothDoubleGauge frontLeft45VehicleDistanceSensor =
-		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 1000.0);
   
   /**
    * Troy Madsen
@@ -322,7 +324,7 @@ public class BasicAutoVehicle extends BasicVehicle
    * should be Double.MAX_VALUE.
    */
   private SmoothDoubleGauge frontLeft60VehicleDistanceSensor =
-		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 10.0);
+		  new SmoothDoubleGauge(Double.MAX_VALUE, 0.0, Double.MAX_VALUE, new GaussianNoiseFunction(5), 1000.0);
 
 
   /////////////////////////////////

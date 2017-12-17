@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="aim4-root/target/AIM4-1.0-SNAPSHOT-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="aim4-root/target/AIM4-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="output" path="aim4-root/target/classes"/>
 </classpath>
