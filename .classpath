@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="aim4-root/src/main/java"/>
-	<classpathentry kind="lib" path="aim4-root/aim4.jar"/>
+	<classpathentry kind="src" path="aim4-root/src/test/java"/>
+	<classpathentry kind="lib" path="/home/troy/Research/Traffic-Coordination/aim4-root/aim4.jar"/>
 	<classpathentry kind="lib" path="aim4-root/target/AIM4-1.0-SNAPSHOT-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="aim4-root/target/AIM4-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

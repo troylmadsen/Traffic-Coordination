@@ -18,7 +18,7 @@ import junit.framework.TestCase;
 import madsen.driver.ForwardSensorAutoDriver;
 import madsen.vehicle.SpeedControl;
 
-class TestMadsen extends TestCase {
+class MadsenTest extends TestCase {
 	
 	// Input parameters
 	int runNumber = 0;
@@ -27,7 +27,7 @@ class TestMadsen extends TestCase {
 	int lanes = 1;
 	double signalDuration = 30.0;
 	double trafficDensity = 0.28;
-	String logFile = "Unit Tests";
+	String logFile = "Unit_Tests";
 	int executionDuration = 60;
 	int modelNum = 3;
 	double delayTime = 5.0; //TODO this needs to take a time value in milliseconds. Currently uses iterations
