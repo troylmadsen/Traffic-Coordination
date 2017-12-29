@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import aim4.gui.Viewer;
 import aim4.map.GridMap;
+import aim4.map.lane.Lane;
 import aim4.sim.setup.BasicSimSetup;
 import aim4.vehicle.AutoVehicleSimView;
 import aim4.vehicle.BasicAutoVehicle;
@@ -105,6 +106,9 @@ class MadsenTest extends TestCase {
 	@Test
 	void speedAdjustment1() {
 		ForwardSensorAutoDriver d = new ForwardSensorAutoDriver(avsv, map, sc);
+		Lane l = map.getLaneRegistry().get(0);
+//		l.sp
+//		d.setCurrentLane(map.getLaneRegistry().get(0));
 		
 		//TODO Get the initial speed and the ending speed and assert whether they are equal
 		//FIXME This does not get the proper speed as the vehicle may be accelerating still
@@ -113,6 +117,14 @@ class MadsenTest extends TestCase {
 		System.out.println(d.getVehicle().getFrontVehicleDistanceSensor().read());
 		d.getVehicle().getFrontVehicleDistanceSensor().record(100);
 		System.out.println(d.getVehicle().getFrontVehicleDistanceSensor().read());
+		
+		for (int i = 0; i < 10; i++) {
+			d.act();
+		}
+		
+		double finalSpeed = avsv.getVelocity();
+		
+		System.out.println(initSpeed + " " + finalSpeed);
 	}
 
 }
