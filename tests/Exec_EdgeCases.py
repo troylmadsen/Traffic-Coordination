@@ -38,3 +38,4 @@ for U in mu:
 for filename in edge_files:
     print('\n\n\n!!!!! Starting ' + filename)
     os.system('./' + filename)
+    os.system('mv * completed/')
