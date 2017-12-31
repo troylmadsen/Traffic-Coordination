@@ -1146,7 +1146,7 @@ ViewerDebugView {
 		resetMenuItem.doClick();
 
 		//Exiting simulation
-		System.out.println("Exiting the simulation");
+//		System.out.println("Exiting the simulation");
 		System.exit(0);
 	}
 
