@@ -3,4 +3,4 @@
 import os
 
 # Remove all test files
-os.system('rm -rf Run*')
+os.system('rm -rf tests/Run*')

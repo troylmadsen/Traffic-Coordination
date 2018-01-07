@@ -7,6 +7,9 @@ import os
 # writing new tests.
 
 
+# Test dump path
+TEST_PATH = 'tests/'
+
 # Template test file to write to other files
 # This assumes the template is in the same directory
 template_path = os.getcwd() + '/Template.py'
@@ -18,7 +21,7 @@ with open(template_path, 'r') as template_file:
 
 
 # Removing old test files
-os.system('rm -rf Run*')
+os.system('rm -rf ' + TEST_PATH +'Run*')
 
 
 # Mean values to use for adjustment
@@ -46,18 +49,23 @@ for U in mu:
             for X in maximum:
                 index += 1
 
+                jar_path = '/home/madsentr/Research/Traffic-Coordination/aim4-root/aim4.jar'
+
+                log_dir = os.getcwd() + '/logs/'
                 params = str(U) + '_' + str(D) + '_' + str(N) + '_' + str(X)
 
                 filename = 'Run_' + str(index) + '_' + params + '.py'
 
-                with open(filename, 'w+') as testfile:
-                    content = template.replace('![0]', str(params))
-                    content = content.replace('![1]', str(U))
-                    content = content.replace('![2]', str(D))
-                    content = content.replace('![3]', str(N))
-                    content = content.replace('![4]', str(X))
+                with open(TEST_PATH + filename, 'w+') as testfile:
+                    content = template.replace('![0]', str(jar_path))
+                    content = content.replace('![1]', str(log_dir))
+                    content = content.replace('![2]', str(params))
+                    content = content.replace('![3]', str(U))
+                    content = content.replace('![4]', str(D))
                     content = content.replace('![5]', str(N))
                     content = content.replace('![6]', str(X))
+                    content = content.replace('![7]', str(N))
+                    content = content.replace('![8]', str(X))
                     testfile.write(content)
 
-                os.system('chmod 700 ' + str(filename))
+                os.system('chmod 700 ' + str(TEST_PATH + filename))
