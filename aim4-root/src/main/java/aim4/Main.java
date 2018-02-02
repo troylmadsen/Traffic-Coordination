@@ -295,7 +295,7 @@ public class Main {
     /* Troy Madsen */
     if (headless) {
     	new Viewer(simSetup, false, true, modelNum, executionDuration, logFile,
-    			runNumber, delayTime, 5, std, minRed, maxRed, minInc, maxInc,
+    			runNumber, delayTime, mean, 1, minRed, maxRed, minInc, maxInc,
     			speedMin, speedMax, speedRelative, accelShift, decelShift);
     }
     else {
