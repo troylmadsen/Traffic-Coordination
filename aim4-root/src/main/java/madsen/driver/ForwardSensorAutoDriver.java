@@ -170,7 +170,7 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 
 		// Get a speed adjustment within bounds
 //		double adjustment = gaussian.nextGaussian() * std + mean;
-		double adjustment = -5;
+		double adjustment = 0;
 		if (adjustment > 0) {
 			if (adjustment < minInc) {
 				adjustment = minInc;
