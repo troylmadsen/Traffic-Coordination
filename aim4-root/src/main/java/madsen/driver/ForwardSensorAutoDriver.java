@@ -169,7 +169,8 @@ public class ForwardSensorAutoDriver extends AutoDriver {
 //		speedMax = this.getCurrentLane().getSpeedLimit() + maxInc;
 
 		// Get a speed adjustment within bounds
-		double adjustment = gaussian.nextGaussian() * std + mean;
+//		double adjustment = gaussian.nextGaussian() * std + mean;
+		double adjustment = -5;
 		if (adjustment > 0) {
 			if (adjustment < minInc) {
 				adjustment = minInc;
